@@ -811,14 +811,14 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
                 out_header = ">"
                 out_header += read
 		sequence = out_header + '\n' + seq + '\n'
-                #unpredictedOutfile.write(out_header)
-                #unpredictedOutfile.write('\n')
-                #unpredictedOutfile.write(seq)
+        
 	    seqs_to_be_translated += sequence
         line = fin.readline()
 
     if seqs_to_be_translated != "" :
     	sixFrameTranslate(seqs_to_be_translated, outfiletag)
+    else:
+	gl_longest_orf = ""
  
     
     if gl_longest_orf != "" :
@@ -831,7 +831,7 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 			if read_id not in allPredictedReadSet :
 				predictedOutfile.write(">"+read_id+'\n'+ReadInfo[read_id]+'\n')
     predictedOutfile.close()
-    #unpredictedOutfile.close()
+    
 
 
 def sixFrameTranslate(seqs_to_be_translated, outfiletag):
