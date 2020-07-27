@@ -62,7 +62,6 @@ void concateAnchor(std::unordered_map<int, anchors>& anchorperf, anchors& anchor
 
 class ExtendGraph : public StrGraph {
 private:
-  
 
   // the string graph
   Integer2Integer p_read_length;
@@ -87,27 +86,28 @@ private:
     const std::string& line,
     struct pEdgeInfo& new_edge);
 
-  void DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int MAX_EXTEND_LENGTH, char* path_name, int& pathnum);
+  void DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int MAX_EXTEND_LENGTH, char* path_name, int& pathnum, bool &ff_spadesGraph);
   void savePath(char* path_name, const struct anchor& anchor);
   //void compressPath(char* path_name);
 
   // SPAdes graph
   String2Integer edgeId;
   int kmer_length;
-//  void savePath(char* path_name, const IntegerList& path);
-//  int getPathLength(const IntegerList& path);
+  void savePath(char* path_name, const IntegerList& path);
+  int getPathLength(const IntegerList& path);
 public:
    ExtendGraph();
   ~ExtendGraph();
-  
+
   // the string graph
-  bool readFqFile(char* filename);
-  bool DirectedDFS(
+  bool readSGFile(char* filename);
+  bool extendGraph(
     char* fgsoutname,
     int MAX_EXTEND_LENGTH,
-    char* path_name);
+    char* path_name,
+    bool  db_flag);
   // SPAdes graph
-  //bool readSPAdesFile(char* filename, int km);
-  //void extendSPAdes(char* path_name, int MAXLEN = 500);
+  bool readSPAdesFile(char* filename, int km);
+  void extendSPAdes(char* path_name, int MAXLEN = 300);
 };
 #endif
