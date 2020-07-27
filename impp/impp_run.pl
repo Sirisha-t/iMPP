@@ -5,6 +5,7 @@ use Getopt::Long;
 use File::Basename;
 use File::Path;
 
+my @exts = qw(.fq .fastq);
 my $assembly_type = "";
 my $single_file = "";
 my $forward_file = "";
@@ -24,6 +25,8 @@ my $assembly_file = "";
 my $read_tag = "";
 my $mergedFastq = "";
 my $max_ext_len = 150;
+my $kmin = 0;
+my $seq;
 my $ncpu ;
 my $fgs_complete;
 my $fgs_train_reads ;
@@ -86,7 +89,7 @@ sub print_usage{
     print " -p/--param-file <filename>    : [optional] parameter file\n";
     print " -h/--help                     : print help message\n";
     print "\n\n";
-    print " NOTE: Input FASTQ read file must be specified in either --12, -1 & -2 or -s format. \n\n"
+    print "NOTE: Input FASTQ read file must be specified in either --12, -1 & -2 or -s format. \n\n"
 }
 
 
@@ -147,35 +150,69 @@ if ( $help ) {
 
 if (length($single_file)==0 && length($forward_file)==0 && length($reverse_file)==0 && length($interleaved_file)==0){
     print "\nERROR: Input FASTQ read(s) file was not specified.\n\n";
-    print_usage();
+    #print_usage();
     exit;
 }
 else{
   if (! -e $single_file){
     if(! -e $interleaved_file){
-      if( (! -e $forward_file) || (! -e $reverse_file) ){
+      if( (! -e $forward_file) && (! -e $reverse_file) ){
+        print "\nERROR: Input file(s) does not exist. Please try again with a valid input. \n";
+        #print_usage();
+        exit;
+      }
+      elsif((! -e $forward_file) || (! -e $reverse_file)){
         print "\nERROR: Both forward and reverse reads must be specified. See --help for details.\n\n";
+        #print_usage();
+        exit;
       }
       else{
-	 	my($IN1, $IN2);
-         	mergeFastqFiles();
-         	$pairend = 0;
+        if((! -z $forward_file) &&  (! -z $reverse_file)){
+          if( ($forward_file=~ /\.fq$/i || $forward_file=~ /\.fastq$/i) && ($reverse_file=~ /(.*).fq/ || $reverse_file=~ /(.*).fastq/)){
+            my($IN1, $IN2);
+            mergeFastqFiles();
+            $pairend = 0;
+          }
+          else{
+            die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";
+          }
+        }
+        else{
+          die "\nERROR: Input file(s) are either empty or in compressed format. Please ensure that the reads are in FASTQ format (.fq or .fastq extension) and try again.\n\n";
+        }
+
+
       }
     }
     else{
-      $command = "python ".$dir."utils/fastq2fasta.py $interleaved_file $out_dir";
-      system( "$command" ) == 0 or die "Error: Failed to convert input fastq to fasta file: $?";
-      $pairend = 0;
+      if(! -z $interleaved_file){
+          if( ($interleaved_file=~ /\.fq$/i || $interleaved_file=~ /\.fastq$/i)){
+            $command = "python ".$dir."utils/fastq2fasta.py $interleaved_file $out_dir";
+            system( "$command" ) == 0 or die "\nError: Failed to convert input fastq to fasta file: $? \n";
+            $pairend = 0;
+          }
+          else{
+            die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";
+          }
+      }
+      else{
+        die "\nERROR: Input file(s) are empty. Please ensure that the input contains reads in FASTQ format and try again.\n\n";
+      }
+
+
     }
   }
   else{
-    $command = "python ".$dir."utils/fastq2fasta.py $single_file $out_dir";
-    system( "$command" ) == 0 or die "Error: Failed to convert input fastq to fasta file: $?";
-
+    if(! -z $single_file){
+      if(($single_file=~ /\.fq$/i || $single_file=~ /\.fastq$/i)){
+        $command = "python ".$dir."utils/fastq2fasta.py $single_file $out_dir";
+        system( "$command" ) == 0 or die "Error: Failed to convert input fastq to fasta file: $?";
+      }
+      else {  die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";}
   }
+  else    { die "\nERROR: Input file(s) are empty. Please ensure that the input contains reads in FASTQ format and try again.\n\n";}
 }
-$reads_fa = $out_dir."/reads.fq2fa.fasta";
-$reads_fq = $out_dir."/reads.re.fastq";
+
 
 if (length($assembly_type)==0){ $assembly_type = "0";	}
 else{
@@ -191,10 +228,16 @@ if (length($out_dir) == 0 ){
     print_usage();
     exit;
 }
+else{
+  if(! -e $out_dir)
+  {
+    $command = "mkdir $out_dir";
+    system("$command") == 0 or die "\nError: Could not creat output directory. Please specify full path with -o parameter.\n";
+  }
+}
 
-
-if ($max_ext_len && $max_ext_len >= 300 ){
-    print "\nERROR: Maximum extend length threshold too high. Please select a lower value for optimal results. [default=300] \n\n";
+if ($max_ext_len && $max_ext_len >= 350 ){
+    print "\nERROR: Maximum extend length threshold too high. Please select a lower value for optimal results. [default=150] \n\n";
     print_usage();
     exit;
 }
@@ -202,9 +245,16 @@ if ($max_ext_len && $max_ext_len >= 300 ){
 if (length($param_file) == 0 ){
   if(! -e $dir."params/parameters.txt" ){
     print "\nERROR: Parameter file missing. Make sure parameters.txt file exists in $dir/params/ directory.\n";
+    print_usage();
+    exit;
   }
   else {  $param_file = $dir."params/parameters.txt"; }
 }
+}
+
+#Set modified read files path
+$reads_fa = $out_dir."/reads.fq2fa.fasta";
+$reads_fq = $out_dir."/reads.re.fastq";
 
 #Loading parameters from parameter file
 loadParameters();
@@ -340,7 +390,23 @@ sub callAssembly
       getElapsedTime($endtime - $starttime);
       print STDERR "\n-----------------------------------------\n";
 
-      # Calling FGS on assembly edges
+      ## Getting kmer Length
+      open( DB, '<', $assembly_file ) or die $!;
+      while( my $line = <DB> ){
+      chomp $line;
+      if ( $line =~ /^(>.*)$/ ){
+           my $header = $line;
+      }
+      elsif ( $line !~ /^\s*$/ ){
+        $seq = $line;
+        chomp $seq;
+        my $lseq = length($seq);
+        if($kmin == 0)  { $kmin = $lseq;}
+        elsif( $lseq < $kmin) { $kmin = $lseq;}
+      }
+    }
+
+      ## Calling FGS on assembly edges
       callFGS_Edges();
 
     }
@@ -462,13 +528,15 @@ sub callIMPP
   $starttime = time();
   print STDERR "\nExtending anchors..\n";
 
-  my $command = $dir."bin/impp_extendAnchor";
-  $command .= " -g $assembly_file ";
-  $command .= " -a $out_dir/edges.gff";
-  $command .= " -l $max_ext_len ";
-  $command .= " -p $out_dir/paths.fa";
+    my $command = $dir."bin/impp_extendAnchor";
+    $command .= " -g $assembly_file ";
+    $command .= " -a $out_dir/edges.gff";
+    $command .= " -l $max_ext_len ";
+    $command .= " -p $out_dir/paths.fa";
+    $command .= " -k $kmin";
 
-  system( "$command" ) == 0 or die "Error: Failed to run iMPP: $?";
+    system( "$command" ) == 0 or die "Error: Failed to run iMPP: $?";
+
 
   $endtime = time();
 
@@ -580,13 +648,13 @@ sub loadParameters
 		next unless /\S/;
 		($opt, $val)  = split();
 		for ( $opt ) {
-      			if ($opt eq "thread")		         { $ncpu     = $val; }
-			if ($opt eq "mlen")                      {$max_ext_len = $val;}
-			if ($opt eq "fgs_complete")              {$fgs_complete = $val; }
-			if ($opt eq "fgs_train_reads")           {$fgs_train_reads    = $val; }
+      			if ($opt eq "thread")		                 { $ncpu     = $val; }
+			      if ($opt eq "mlen")                      {$max_ext_len = $val;}
+			      if ($opt eq "fgs_complete")              {$fgs_complete = $val; }
+			      if ($opt eq "fgs_train_reads")           {$fgs_train_reads    = $val; }
       			if ($opt eq "fgs_train_other")           {$fgs_train_other    = $val; }
-			if ($opt eq "fgs_dropindel")             {$fgs_drop_indel   = $val; }
-		  	if ($opt eq "assemble")                  {$assemble   = $val; }
+			      if ($opt eq "fgs_dropindel")             {$fgs_drop_indel   = $val; }
+		  	    if ($opt eq "assemble")                  {$assemble   = $val; }
       			if ($opt eq "sga_preprocess")             {$sga_preprocess = $val;}
       			if ($opt eq "sga_index")                  {$sga_index = $val;}
       			if ($opt eq "sga_index_algorithm")       {$sga_index_algorithm = $val;}
@@ -606,7 +674,7 @@ sub loadParameters
       			if ($opt eq "sga_filter")                 {$sga_filter = $val;}
       			if ($opt eq "sga_filter_kmer")            {$sga_filter_kmer = $val;}
       			if ($opt eq "sga_filter_kmer_thresh")     {$sga_filter_kmer_thresh = $val;}
-     			if ($opt eq "spades")                     {$spades = $val;}
+     			  if ($opt eq "spades")                     {$spades = $val;}
       			if ($opt eq "spades_only_assembler")      {$spades_only_assembler = $val;}
       			if ($opt eq "spades_error_correct")       {$spades_error_correct = $val;}
       			if ($opt eq "spades_memory_limit")        {$spades_mem_limit = $val;}
@@ -615,7 +683,7 @@ sub loadParameters
       			if ($opt eq "spades_kmer")                {$spades_kmer = $val;}
       			if ($opt eq "spades_rr")                  {$spades_rr = $val;}
       			if ($opt eq "bwa")                        {$bwa = $val;}
-     			if ($opt eq "bwa_min_seed")               {$bwa_min_seed = $val;}
+     			  if ($opt eq "bwa_min_seed")               {$bwa_min_seed = $val;}
       			if ($opt eq "bwa_min_score")              {$bwa_min_score = $val;}
       			if ($opt eq "plass")                      {$plass = $val;}
       			if ($opt eq "plass_assemble")             {$plass_assemble = $val;}
@@ -636,7 +704,7 @@ sub checkParameters
 {
 	my $max_cpu = `grep -w "processor" /proc/cpuinfo | wc -l`; chomp $max_cpu;
 	if ( $ncpu > $max_cpu ) {$ncpu = $max_cpu; }
-	if ( ! defined $max_ext_len ) { die "ERROR: Max extend length must be given\n"; }
+	if ( ! defined $max_ext_len ) { die "ERROR: Maximum extend length must be given\n"; }
 	if ( $fgs_complete != 0 && $fgs_complete != 1 ) { die "ERROR: Invalid value for FGS complete option\n"; }
 	if ( $fgs_train_reads ne "complete"   &&
 		 $fgs_train_reads ne "sanger_5"   &&
@@ -645,7 +713,7 @@ sub checkParameters
 		 $fgs_train_reads ne "454_30"     &&
 		 $fgs_train_reads ne "illumina_5" &&
 		 $fgs_train_reads ne "illumina_10" ) { die "ERROR: Invalid value for FGS train option for input reads\n"; }
-  	if ( $fgs_train_other ne "complete"   &&
+  if ( $fgs_train_other ne "complete"   &&
    		 $fgs_train_other ne "sanger_5"   &&
    		 $fgs_train_other ne "sanger_10"  &&
    		 $fgs_train_other ne "454_10"     &&
@@ -655,36 +723,36 @@ sub checkParameters
 	if ( $fgs_drop_indel != 0 && $fgs_drop_indel != 1 ) { die "ERROR: Invalid value for FGS dropindel option\n"; }
 	if ( $assemble != 0 && $assemble != "1" ) { die "ERROR: Invalid value for assembler\n"; }
 	if ( $sga_index != 0 && $sga_index != 1 ) { die "ERROR: Invalid sga index option\n"; }
-  	if ( $sga_index_algorithm != 0 && $sga_index_algorithm != 1 ) { die "ERROR: Invalid sga index algorithm option\n"; }
-  	if ( $sga_overlap != 0 && $sga_overlap != 1 ) { die "ERROR: Invalid sga overlap option\n"; }
-	  if ( $sga_overlap_min_len < 1 ) { die "ERROR: Invalid value sga overlap min length\n"; }
-	  if ( $sga_rmdup != 0 && $sga_rmdup != 1 ) { die "ERROR: Invalid sga rmdup option\n"; }
-	  if ( $sga_assemble!= 0 && $sga_assemble != 1 ) { die "ERROR: Invalid sga assemble option\n"; }
-	  if ( $sga_assemble_min_len < 1 ) { die "ERROR: Invalid value sga assemble min length\n"; }
-	  if ( $sga_merge != 0 && $sga_merge != 1 ) { die "ERROR: Invalid sga merge option\n"; }
-	  if ( $sga_bwt2fa != 0 && $sga_bwt2fa != 1 ) { die "ERROR: Invalid sga bwt2fa option\n"; }
-	  if ( $sga_correct != 0 && $sga_correct != 1 ) { die "ERROR: Invalid sga correct option\n"; }
-	  if ( $sga_correct_algo != 0 && $sga_correct_algo != 1 && $sga_correct_algo !=2 ) { die "ERROR: Invalid sga correct algorithm option\n"; }
-	  if ( $sga_correct_kmer < 1 ) { die "ERROR: Invalid value sga correct kmer length\n"; }
-	  if ( $sga_correct_min_olap < 1 ) { die "ERROR: Invalid value sga correct min overlap length\n"; }
-	  if ( $sga_fmmerge != 0 && $sga_fmmerge != 1 ) { die "ERROR: Invalid sga fmmerge option\n"; }
-	  if ( $sga_fmmerge_min_olap < 1 ) { die "ERROR: Invalid value sga fmmerge min overlap length\n"; }
-	  if ( $sga_filter != 0 && $sga_filter != 1 ) { die "ERROR: Invalid sga filter option\n"; }
-	  if ( $sga_filter_kmer < 1 ) { die "ERROR: Invalid value sga filter kmer length\n"; }
-	  if ( $sga_filter_kmer_thresh < 1 ) { die "ERROR: Invalid value sga filter kmew threshold\n"; }
-	  if ($spades ne "s") { die "ERROR: Invalid spades option\n";}
-	  if ( $spades_only_assembler != 0 && $spades_only_assembler != 1 ) { die "ERROR: Invalid spades assembler option\n"; }
-	  if ( $spades_error_correct != 0 && $spades_error_correct != 1 ) { die "ERROR: Invalid spades error correct option\n"; }
-	  if ( $spades_continue != 0 && $spades_continue != 1 ) { die "ERROR: Invalid spades continue option\n"; }
-	  if ( $spades_disable_gzip != 0 && $spades_disable_gzip != 1 ) { die "ERROR: Invalid spades disable gzip option\n"; }
-	  if ( $spades_rr != 0 && $spades_rr != 1 ) { die "ERROR: Invalid spades repeat resolution option\n"; }
-	  if ( $spades_mem_limit < 1 ) { die "ERROR: Invalid spades memory limit \n"; }
-	  if ( $bwa_min_seed < 0 ) { die "ERROR: Invalid bwa min seed option\n"; }
-	  if ( $bwa_min_score < 0)  { die "ERROR: Invalid bwa min score option\n"; }
-	  if ( $plass != 0 && $plass != 1 ) { die "ERROR: Invalid plass option\n"; }
-	  if ( $plass_assemble != 0 && $plass_assemble != 1 ) { die "ERROR: Invalid plass assemble option\n"; }
-	  if ( $plass_min_len < 0 ) { die "ERROR: Invalid plass min length option\n"; }
-	  if ( $plass_num_iter < 0 ) { die "ERROR: Invalid plass num iterations option\n"; }
+  if ( $sga_index_algorithm != 0 && $sga_index_algorithm != 1 ) { die "ERROR: Invalid sga index algorithm option\n"; }
+  if ( $sga_overlap != 0 && $sga_overlap != 1 ) { die "ERROR: Invalid sga overlap option\n"; }
+  if ( $sga_overlap_min_len < 1 ) { die "ERROR: Invalid value sga overlap min length\n"; }
+  if ( $sga_rmdup != 0 && $sga_rmdup != 1 ) { die "ERROR: Invalid sga rmdup option\n"; }
+  if ( $sga_assemble!= 0 && $sga_assemble != 1 ) { die "ERROR: Invalid sga assemble option\n"; }
+  if ( $sga_assemble_min_len < 1 ) { die "ERROR: Invalid value sga assemble min length\n"; }
+	if ( $sga_merge != 0 && $sga_merge != 1 ) { die "ERROR: Invalid sga merge option\n"; }
+  if ( $sga_bwt2fa != 0 && $sga_bwt2fa != 1 ) { die "ERROR: Invalid sga bwt2fa option\n"; }
+  if ( $sga_correct != 0 && $sga_correct != 1 ) { die "ERROR: Invalid sga correct option\n"; }
+  if ( $sga_correct_algo != 0 && $sga_correct_algo != 1 && $sga_correct_algo !=2 ) { die "ERROR: Invalid sga correct algorithm option\n"; }
+  if ( $sga_correct_kmer < 1 ) { die "ERROR: Invalid value sga correct kmer length\n"; }
+  if ( $sga_correct_min_olap < 1 ) { die "ERROR: Invalid value sga correct min overlap length\n"; }
+  if ( $sga_fmmerge != 0 && $sga_fmmerge != 1 ) { die "ERROR: Invalid sga fmmerge option\n"; }
+  if ( $sga_fmmerge_min_olap < 1 ) { die "ERROR: Invalid value sga fmmerge min overlap length\n"; }
+  if ( $sga_filter != 0 && $sga_filter != 1 ) { die "ERROR: Invalid sga filter option\n"; }
+  if ( $sga_filter_kmer < 1 ) { die "ERROR: Invalid value sga filter kmer length\n"; }
+  if ( $sga_filter_kmer_thresh < 1 ) { die "ERROR: Invalid value sga filter kmew threshold\n"; }
+  if ($spades ne "s") { die "ERROR: Invalid spades option\n";}
+  if ( $spades_only_assembler != 0 && $spades_only_assembler != 1 ) { die "ERROR: Invalid spades assembler option\n"; }
+  if ( $spades_error_correct != 0 && $spades_error_correct != 1 ) { die "ERROR: Invalid spades error correct option\n"; }
+  if ( $spades_continue != 0 && $spades_continue != 1 ) { die "ERROR: Invalid spades continue option\n"; }
+  if ( $spades_disable_gzip != 0 && $spades_disable_gzip != 1 ) { die "ERROR: Invalid spades disable gzip option\n"; }
+  if ( $spades_rr != 0 && $spades_rr != 1 ) { die "ERROR: Invalid spades repeat resolution option\n"; }
+  if ( $spades_mem_limit < 1 ) { die "ERROR: Invalid spades memory limit \n"; }
+  if ( $bwa_min_seed < 0 ) { die "ERROR: Invalid bwa min seed option\n"; }
+  if ( $bwa_min_score < 0)  { die "ERROR: Invalid bwa min score option\n"; }
+  if ( $plass != 0 && $plass != 1 ) { die "ERROR: Invalid plass option\n"; }
+  if ( $plass_assemble != 0 && $plass_assemble != 1 ) { die "ERROR: Invalid plass assemble option\n"; }
+  if ( $plass_min_len < 0 ) { die "ERROR: Invalid plass min length option\n"; }
+  if ( $plass_num_iter < 0 ) { die "ERROR: Invalid plass num iterations option\n"; }
 
 
 }
