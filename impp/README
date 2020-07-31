@@ -26,7 +26,7 @@ To install iMPP, please follow the steps below:
     $ tar xzvf impp.tar.gz
 
 2. Install 3rd party softwares by running the "install.sh" script.
-    $ ./install.sh
+    $ bash install.sh
 
 
 ==============================================
@@ -60,6 +60,8 @@ An example simulated single-end Illumina reads file is provided in the ~/example
 iMPP can be run on this file with the following options:
 
 $ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 150 -p params/parameters.txt &> example/impp.example.run.log
+
+(Note: The ~/example/samplereads.fq.gz is a zipped file. Please make sure you unzip it (cmd: gunzip samplereads.fq.gz) before running iMPP)  
 
 In this example, iMPP will use the preset parameters from the params/parameters.txt file. 
 
