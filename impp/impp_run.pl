@@ -77,7 +77,7 @@ my $opt;
 ##====================================================================
 sub print_usage{
 
-    print "\nUSAGE: ./impp_run.pl [options] -o <output_directory>";
+    print "\nUSAGE: ./impp_run.pl [options] <fastq file/s> -o <output_directory>";
     print"\n\nInput data options:\n\n";
     print " --12            <filename>    : fastq file with interlaced forward and reverse paired-end reads\n";
     print " -1              <filename>    : fastq file with forward paired-end reads\n";
@@ -88,7 +88,7 @@ sub print_usage{
     print " -m/--max-len    <int>         : [optional] maximum extension length for anchors [default: 150] \n";
     print " -p/--param-file <filename>    : [optional] parameter file\n";
     print " -h/--help                     : print help message\n";
-    print "\n\n";
+    print "\n";
     print "NOTE: Input FASTQ read file must be specified in either --12, -1 & -2 or -s format. \n\n"
 }
 
@@ -131,7 +131,9 @@ print "\n";
 #====================================================================
 sub getOpts
 {
+my %opts;
 GetOptions(
+	  \%opts,
           's=s'             =>    \$single_file,
           '1=s'             =>    \$forward_file,
           '2=s'             =>    \$reverse_file,
@@ -148,12 +150,24 @@ if ( $help ) {
      exit;
 }
 
-if (length($single_file)==0 && length($forward_file)==0 && length($reverse_file)==0 && length($interleaved_file)==0){
-    print "\nERROR: Input FASTQ read(s) file was not specified.\n\n";
-    #print_usage();
+if (length($out_dir)==0 || (length($single_file)==0 && length($forward_file)==0 && length($reverse_file)==0 && length($interleaved_file)==0)){
+    print "\nERROR: Input parameters were not specified properly. Please see usage below. \n\n";
+    print_usage();
     exit;
 }
 else{
+  if (length($out_dir) == 0 ){
+    print "\nERROR: An output directory name must be specified.\n\n";
+    print_usage();
+    exit;
+   }
+  else{
+    if(! -e $out_dir)
+    {
+      $command = "mkdir $out_dir";
+      system("$command") == 0 or die "\nError: Could not creat output directory. Please specify full path with -o parameter.\n";
+    }
+  } 
   if (! -e $single_file){
     if(! -e $interleaved_file){
       if( (! -e $forward_file) && (! -e $reverse_file) ){
@@ -171,7 +185,7 @@ else{
           if( ($forward_file=~ /\.fq$/i || $forward_file=~ /\.fastq$/i) && ($reverse_file=~ /(.*).fq/ || $reverse_file=~ /(.*).fastq/)){
             my($IN1, $IN2);
             mergeFastqFiles();
-            $pairend = 0;
+            $pairend = 1;
           }
           else{
             die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";
@@ -189,7 +203,7 @@ else{
           if( ($interleaved_file=~ /\.fq$/i || $interleaved_file=~ /\.fastq$/i)){
             $command = "python ".$dir."utils/fastq2fasta.py $interleaved_file $out_dir";
             system( "$command" ) == 0 or die "\nError: Failed to convert input fastq to fasta file: $? \n";
-            $pairend = 0;
+            $pairend = 1;
           }
           else{
             die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";
@@ -221,19 +235,6 @@ else{
     	print_usage();
     	exit;
 	}
-}
-
-if (length($out_dir) == 0 ){
-    print "\nERROR: An output directory name must be specified.\n\n";
-    print_usage();
-    exit;
-}
-else{
-  if(! -e $out_dir)
-  {
-    $command = "mkdir $out_dir";
-    system("$command") == 0 or die "\nError: Could not creat output directory. Please specify full path with -o parameter.\n";
-  }
 }
 
 if ($max_ext_len && $max_ext_len >= 350 ){
