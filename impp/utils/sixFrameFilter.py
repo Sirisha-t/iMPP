@@ -668,7 +668,7 @@ def Seqs_Translator(proper_id, have_seqs, trans_fr, gen_code):
 			gl_longest_orf.write(longest_orf + '\n')
 			'''
 			gl_longest_orf += ">" + proper_id + lfr + '\n' + longest_orf + '\n'
-		## 4	
+		## 4
 		if llen4 >= llen1 and llen4 >= llen2 and llen4 >= llen3 and llen4 >= llen5 and llen4 >= llen6:
 			if llen4 == llen1 or llen4 == llen2 or llen4 == llen3 or llen4 == llen5 or llen4 == llen6:
 				dupl_status = " DUPL_LONG"
@@ -737,7 +737,7 @@ def Seqs_Translator(proper_id, have_seqs, trans_fr, gen_code):
 			gl_longest_orf.write(longest_orf + '\n')
 			'''
 			gl_longest_orf += ">" + proper_id + lfr + '\n' + longest_orf + '\n'
-		
+
 def InputFileReader(gff_name, bwa_edgename, bwa_pathname, input_read, out_name):
     # Reading FGS predictions on input reads
     gff = open(gff_name, 'r')
@@ -780,6 +780,7 @@ def InputFileReader(gff_name, bwa_edgename, bwa_pathname, input_read, out_name):
 
 def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
     global seqs_to_be_translated
+    global gl_longest_orf
     fin = open(input_read, 'r')
     outfiletag = input_read[0:input_read.rfind('.')]
     predictedOutfile = open (outd+'/reads.filter.fasta', 'w')
@@ -811,7 +812,7 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
                 out_header = ">"
                 out_header += read
 		sequence = out_header + '\n' + seq + '\n'
-        
+
 	    seqs_to_be_translated += sequence
         line = fin.readline()
 
@@ -819,8 +820,8 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
     	sixFrameTranslate(seqs_to_be_translated, outfiletag)
     else:
 	gl_longest_orf = ""
- 
-    
+
+
     if gl_longest_orf != "" :
 	lines = gl_longest_orf.split('\n')
 	for line in lines :
@@ -831,7 +832,7 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 			if read_id not in allPredictedReadSet :
 				predictedOutfile.write(">"+read_id+'\n'+ReadInfo[read_id]+'\n')
     predictedOutfile.close()
-    
+
 
 
 def sixFrameTranslate(seqs_to_be_translated, outfiletag):
@@ -1336,4 +1337,3 @@ if __name__ == "__main__":
         	out_name = sys.argv[5]
 
 		InputFileReader(gff_name, bwa_edgename, bwa_pathname, fasta_read, out_name)
-
