@@ -34,7 +34,7 @@ Running the program:
 
 1.  The impp_run.pl perl wrapper is used to run the program. The command used is:
 
-USAGE: ./impp_run.pl [options] -o <output_directory>
+USAGE: ./impp_run.pl [options] <fastq_file/s> -o <output_directory>
 
 Input data options:
 	 --12  		 <filename> :	 fastq file with interlaced forward and reverse paired-end reads
