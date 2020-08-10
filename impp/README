@@ -62,7 +62,7 @@ An example simulated single-end Illumina reads file is provided in the ~/example
 
 iMPP can be run on this file with the following options:
 
-$ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 150 -p params/parameters.txt &> example/impp.example.run.log
+$ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/parameters.txt &> example/impp.example.run.log
 
 (Note: The ~/example/samplereads.fq.gz is a zipped file. Please make sure you unzip it (cmd: gunzip samplereads.fq.gz) before running iMPP)  
 
