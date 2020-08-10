@@ -7,8 +7,9 @@ bool StrGraph::loadAnchor(
 {
   std::ifstream fin;
   fin.open(pEdgeSet);
-  if (!fin.is_open())	// fail to open
+  if (!fin.is_open())
   {
+
     std::cout << "Error: unable to open " << pEdgeSet << "\n";
     return false;
   }
@@ -60,24 +61,20 @@ bool StrGraph::parseAnchorLine(
   struct anchor& new_anchor,
   int MAX_EXTEND_LENGTH)
 {
-    // query name   : 595,11855,1,2003,6220,1948,246:593,594
-    //boost::char_separator<char> sep(","); //lines from here to int node- latest addition
-  //  boost::tokenizer<boost::char_separator<char> > tokens(line, sep);
-  //  boost::tokenizer<boost::char_separator<char> >::iterator it;
+
     int length = p_seq[node].size();
     //std::cout<<"Length of node is: "<<length<<"\n";
     int left, right;
     //new_anchor.push_back(node);
     if(MAX_EXTEND_LENGTH > 0)
     {
-        left = MAX_EXTEND_LENGTH;
-        right = MAX_EXTEND_LENGTH;
+        left = (MAX_EXTEND_LENGTH - length)/2;
+        right = (MAX_EXTEND_LENGTH - length)/2;
     }
     new_anchor.path = IntegerList{node};
     new_anchor.M_upstream = left;
     new_anchor.M_downstream = right;
 
-    //std::cout<<"Path in anchor is :"<<new_anchor.path<<"\n";
 
   return true;
 }
@@ -233,7 +230,7 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
             path.push_front(new_head);
             p_crossed[new_head] = true;
             int last_read_length;
-            if(pEdge.count(new_head) == 0)
+            if(prededge_set.count(new_head) == 0) //unpredicted adjacent edge
             {
               if(!ff_spadesGraph){
                 IntegerVector reads = p_read_on_node[new_head];
@@ -241,28 +238,27 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
                 last_read_length = p_read_length[last_read_id];
               }
               else{
-		std::cout<<kmer_length;
+		            std::cout<<kmer_length;
                 last_read_length = kmer_length;
               }
-
 
               // update anchor stack
               struct anchor new_anchor;
               new_anchor.path = path;
-              new_anchor.M_upstream = top_anchor.M_upstream - p_seq[new_head].size() + last_read_length;
+              new_anchor.M_upstream = top_anchor.M_upstream - p_seq[new_head].size() + last_read_length; // +last_read_length;
               new_anchor.M_downstream = top_anchor.M_downstream;
+              //std::cout<<"head :"<<new_head<<"\t"<<"upstream :"<<new_anchor.M_upstream<<"\n";
 
               checking_stacks.push(new_anchor);
               path.pop_front();
             }
-            else
+            else //predicted edge
             {
-                  if((prededge_set[new_head].end -  prededge_set[new_head].start + 1 ) <= MAX_EXTEND_LENGTH)
-                   {
-                      top_anchor.path = path;
-                      half_done_stacks.push(top_anchor);
-                      path.pop_front();
-                    }
+		    //std::cout<<"Predicted adj edge(up) : "<<new_head<<"\n";
+                    top_anchor.path = path;
+                    half_done_stacks.push(top_anchor);
+                    path.pop_front();
+
             }
         }
       }
@@ -284,7 +280,7 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
         int last_node_id = path.back();
         BoostSTRVertex last_node = vertex[last_node_id];
         auto it_v = boost::adjacent_vertices(last_node, *p_graph_).first;
-        if(it_v == boost::adjacent_vertices(last_node, *p_graph_).second)  // no head
+        if(it_v == boost::adjacent_vertices(last_node, *p_graph_).second)  // no tail
         {
                  pathnum++;
                  if(ff_spadesGraph) savePath(path_name, top_anchor.path);
@@ -300,7 +296,7 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
               path.push_back(new_tail);
               p_crossed[new_tail] = true;
               int first_read_length;
-              if(pEdge.count(new_tail) == 0)
+              if(prededge_set.count(new_tail) == 0)
               {
                 if(!ff_spadesGraph)
                 {
@@ -322,13 +318,10 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
                 path.pop_back();
               }
               else{
-                      if(prededge_set[new_tail].start <= MAX_EXTEND_LENGTH &&  prededge_set[new_tail].end <= MAX_EXTEND_LENGTH)
-                        {
-
-                          top_anchor.path = path;
-                          savePath(path_name, top_anchor);
-                          path.pop_back();
-                        }
+		    //std::cout<<"Pred adj edge(down) : "<<new_tail<<"\n";
+                    top_anchor.path = path;
+                    savePath(path_name, top_anchor);
+                    path.pop_back();
               }
 
             }
