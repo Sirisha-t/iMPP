@@ -238,7 +238,6 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
                 last_read_length = p_read_length[last_read_id];
               }
               else{
-		            std::cout<<kmer_length;
                 last_read_length = kmer_length;
               }
 
