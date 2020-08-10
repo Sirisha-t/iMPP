@@ -237,8 +237,8 @@ else{
 	}
 }
 
-if ($max_ext_len && $max_ext_len >= 350 ){
-    print "\nERROR: Maximum extend length threshold too high. Please select a lower value for optimal results. [default=150] \n\n";
+if ($max_ext_len && $max_ext_len >= 700 ){
+    print "\nERROR: Maximum extend length threshold too high. Please select a lower value for optimal results. [default=300] \n\n";
     print_usage();
     exit;
 }
