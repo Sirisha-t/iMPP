@@ -9,6 +9,7 @@ The input for the software are FASTQ sequences, and the output comprises of 4 fi
 1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
 
 ==============================================
+
 Prerequisites:
 
 1. gcc compiler (version > 4.8.5)
@@ -16,6 +17,7 @@ Prerequisites:
 3. perl interpreter
 
 ==============================================
+
 Installation:
 
 To install iMPP, please follow the steps below:
@@ -31,6 +33,7 @@ To install iMPP, please follow the steps below:
 
 
 ==============================================
+
 Running the program:
 
 1.  The impp_run.pl perl wrapper is used to run the program. The command used is:
@@ -55,6 +58,7 @@ preset parameters will be used.
 
 
 ==============================================
+
 Example:
 An example simulated single-end Illumina reads file is provided in the ~/example/ directory.
 
@@ -67,7 +71,8 @@ $ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/pa
 In this example, iMPP will use the preset parameters from the params/parameters.txt file. 
 
 ==============================================
-Output:
+
+	Output:
 
 The final iMPP output should contain four files.
 
