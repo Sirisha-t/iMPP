@@ -1,12 +1,10 @@
 # iMPP : integrated Metagenomic Protein Predictor
-==============================================
 
 Description:
 
 iMPP is a tool designed to predict and assemble peptides from short fragmentary reads.
 iMPP is written in C++ and has been tested on a 64-bit Linux system.
-The input for the software are FASTQ sequences, and the output comprises of 4 files:
-1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
+The input for the software are FASTQ sequences, and the output comprises of 4 files: 1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
 
 ==============================================
 
@@ -99,11 +97,11 @@ RNGSDYSAAVLAACLRADCCEIWTDVDGVYTCDPRQVPDARLLKSMSYQEAMELSYFGAKVLHPRTITPIAQFQIPCLIK
 
 3. orfs.gff : This file lists the gene prediction results in gff format.
 E.g.
-##gff-version 3
-2,17,14			FGS	CDS	90	191	.	+	2	ID=2,17,14_90_191_+;product=predicted protein
-3,17,15			FGS	CDS	90	194	.	+	2	ID=3,17,15_90_194_+;product=predicted protein
-14,51,49,46,40,59,58	FGS	CDS	2	136	.	+	1	ID=14,51,49,46,40,59,58_2_136_+;product=predicted protein
-15,73,40,59,58		FGS	CDS	1	132	.	+	0	ID=15,73,40,59,58_1_132_+;product=predicted protein
+>##gff-version 3
+>2,17,14			FGS	CDS	90	191	.	+	2	ID=2,17,14_90_191_+;product=predicted protein
+>3,17,15			FGS	CDS	90	194	.	+	2	ID=3,17,15_90_194_+;product=predicted protein
+>14,51,49,46,40,59,58	FGS	CDS	2	136	.	+	1	ID=14,51,49,46,40,59,58_2_136_+;product=predicted protein
+>15,73,40,59,58		FGS	CDS	1	132	.	+	0	ID=15,73,40,59,58_1_132_+;product=predicted protein
 
 4. assembled_proteins.faa : This file containts the assembled protein sequences.
 E.g.
