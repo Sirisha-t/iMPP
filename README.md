@@ -1,9 +1,6 @@
-# iMPP
+# iMPP : integrated Metagenomic Protein Predictor
 ==============================================
 
-iMPP: integrated Metagenomic Protein Predictor
-
-==============================================
 Description:
 
 iMPP is a tool designed to predict and assemble peptides from short fragmentary reads.
