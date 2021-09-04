@@ -36,7 +36,7 @@ To install iMPP, please follow the steps below:
 
 Running the program:
 
-1.  The impp_run.pl perl wrapper is used to run the program. The command used is:
+The impp_run.pl perl wrapper is used to run the program. The command used is:
 
 USAGE: ./impp_run.pl [options] <fastq_file/s> -o <output_directory>
 
@@ -72,7 +72,7 @@ In this example, iMPP will use the preset parameters from the params/parameters.
 
 ==============================================
 
-	Output:
+Output:
 
 The final iMPP output should contain four files.
 
