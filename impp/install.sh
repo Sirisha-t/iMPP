@@ -1,15 +1,12 @@
-#bin/bash
+#! /bin/sh
 #
 # Script to install third-party softwares
 #------------------------
 # Pre-requisites needed
 #------------------------
-# cmake :
-# zlib :
-# gcc version:
-#
-#
-#
+# cmake
+# zlib
+# gcc
 
 export IMPP_HOME=`pwd`
 
@@ -65,6 +62,10 @@ cd $IMPP_HOME/lib
 #fi
 tar xvzf sga-binary-Linux64.tar.gz
 
+##Installing Diamond
+echo -e "\nInstalling Diamond..."
+cd $IMPP_HOME/lib
+tar xvzf diamond-linux64.tar.gz
 
 echo -e "\nCompleted installing all third-party tools."
 echo -e "\n----------------------------------------------\n"
