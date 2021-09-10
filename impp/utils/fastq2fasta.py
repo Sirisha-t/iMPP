@@ -7,8 +7,8 @@ def convertFq(fastq, outd):
 	line_id = 1
         read_id = 0
 	readMap = {}
-	outfile = open(outd+'/reads.fq2fa.fasta', 'w')
-	fqoutfile = open(outd+'/reads.re.fastq', 'w')
+	outfile = open(outd+'/reads.fasta', 'w')
+	fqoutfile = open(outd+'/reads.fastq', 'w')
 	seqNameMap = open(outd+'/reads.namemap.txt', 'w')
 	fastas = 1
 	fasta_length =0
