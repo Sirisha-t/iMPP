@@ -1,4 +1,459 @@
 #include "SG.h"
+#include "unionFind.hpp"
+
+
+void StrGraph::writeMergedGraph(std::string & filename)
+{
+  /** timer **/
+  clock_t t;
+  t = clock();
+  /***********/
+  std::cout << "start write..\n";
+  std::string outname = filename.substr(0, filename.find_last_of('.')) + ".merged.fq";
+  std::ofstream fout(outname.c_str());
+  for(int node_i = 0; node_i < p_seq.size(); node_i++)
+  {
+    fout << ">" << node_i << ",";
+    for(int r = 0; r < p_read_on_node[node_i].size(); r++)
+    {
+      fout << p_read_on_node[node_i][r] << ',' << p_pos_on_node[node_i][r] << ',';
+      if(p_read_on_node[node_i][r] < 0)        fout << "-1";
+      else                                     fout << p_read_length[p_read_on_node[node_i][r]];
+      if(r+1 < p_read_on_node[node_i].size())  fout << ',';
+    }
+
+    BoostSTRVertex v = vertex[node_i];
+    auto it_v = boost::adjacent_vertices(v, *p_graph_).first;
+    if(it_v != boost::adjacent_vertices(v, *p_graph_).second)
+    {
+      fout << ':';
+      for(; it_v != boost::adjacent_vertices(v, *p_graph_).second; it_v++)
+      {
+        fout << (*p_graph_)[*it_v].rid_;
+        it_v++;
+        if(it_v != boost::adjacent_vertices(v, *p_graph_).second) fout << ',';
+        it_v--;
+      }
+    }
+    fout << "\n" << p_seq[node_i] << "\n";
+  }
+  /** timer **/
+  t = clock() - t;
+  std::cout << "write graph takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
+  /***********/
+  fout.close();
+}
+
+void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
+{
+  /*********/
+  std::ifstream fin;
+  /*********/
+  clock_t t;
+  /*********/
+  /* load contigs */
+  /*********/
+  t = clock();
+  /*********/
+  fin.open(contig_name.c_str());
+  StringVector contigs;
+  String2Integer contigs_id;
+  if (!fin.is_open())	    // fail to open
+  {
+    std::cout << "Error: " << contig_name << " doesnot exist!\n";
+  }
+  else				// succeed to open
+  {
+    std::string line;
+    std::string name;
+    while(std::getline(fin, line))
+    {
+      if(line[0]=='>')
+      {
+        name = line.substr(1);
+        contigs_id[name] = contigs_id.size()-1;
+      }
+      else
+      {
+        if(contigs.size() < contigs_id.size())  contigs.push_back("");
+        contigs[contigs.size()-1] += line;
+      }
+    }
+  }
+  fin.clear();
+  fin.close();
+  /*********/
+  t = clock() - t;
+  std::cout << "Loading contigs takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
+  /*********/
+  /* load terminals */
+  /*********/
+  t = clock();
+  /*********/
+  std::vector<BooleanVector> taken_2D;
+  for(auto x : contigs) taken_2D.push_back(BooleanVector(x.size(), false));
+  std::vector<BooleanVector> coverage_2D;
+  for(auto x : contigs) coverage_2D.push_back(BooleanVector(x.size(), false));
+  std::vector<std::map<int, int>> f_terminals = std::vector<std::map<int, int>>(contigs.size());
+  std::vector<std::map<int, int>> f_match = std::vector<std::map<int, int>>(contigs.size());
+  fin.open(sam_name.c_str());	// open file
+  if (!fin.is_open())	    // fail to open
+  {
+    std::cout << "Error: " << sam_name << " doesnot exist!\n";
+  }
+  else				// succeed to open
+  {
+    std::string line;
+    boost::char_separator<char> sep("\t");
+    boost::tokenizer<boost::char_separator<char> >::iterator it;
+    while(std::getline(fin, line))
+    {
+      if(line[0] != '@')
+      {
+        boost::tokenizer<boost::char_separator<char> > tokens(line, sep);
+        it = tokens.begin();  // edge name
+        int node_id = std::stoi((*it));
+        std::string header = (*it);
+        bool ff_orphant_read = thisIsOrphat( header );
+        ++it;                 // flag
+        int flag = std::stoi((*it));
+        ++it;                 // reference name
+        int ref_id = contigs_id[(*it)];
+        ++it;                 // pos
+        std::string pos_str = (*it);
+        ++it;                 // MAPQ
+        ++it;                 // CIAGR
+        std::string CIAGR = (*it);
+        BoostSTRVertex node = vertex[node_id];
+
+        // unsigned int mapping_quality = goodMapping(CIAGR, flag);
+        // if(ff_orphant_read)
+        // {
+        //   if(mapping_quality != 0)
+        //   {
+        //     int read_length = p_seq[node_id].size();
+        //     int pos = std::stoi(pos_str);
+        //     for(int i = 0; i < read_length; ++i)
+        //     {
+        //       coverage_2D[ref_id][pos+i-1] = true;
+        //       taken_2D[ref_id][pos+i-1] = true;
+        //     }
+        //   }
+        // }
+        // else
+        // {
+        //   int pos = std::stoi(pos_str);
+        //   for(int i = 0; i < mapping_quality; ++i) taken_2D[ref_id][pos+i-1] = true;
+        //   if((mapping_quality != 0) && ((boost::in_degree(node, *p_graph_)*boost::out_degree(node, *p_graph_)) == 0))
+        //   {
+        //     if((flag&16) == 0)
+        //     {
+        //       f_terminals[ref_id][pos] = node_id;
+        //       f_match[ref_id][node_id] = mapping_quality;
+        //     }
+        //   }
+        // }
+        unsigned int mapping_quality = goodMapping(CIAGR, flag);
+        if(ff_orphant_read)
+        {
+          if((mapping_quality&0xF0000000) == 0x00000000)
+          {
+            int read_length = p_seq[node_id].size();
+            int pos = std::stoi(pos_str);
+            for(int i = 0; i < read_length; ++i)
+            {
+              coverage_2D[ref_id][pos+i-1] = true;
+              taken_2D[ref_id][pos+i-1] = true;
+            }
+          }
+        }
+        else
+        {
+          int pos = std::stoi(pos_str);
+          int match_length = (mapping_quality&0x0FFFFFFF);
+          for(int i = 0; i < match_length; ++i) taken_2D[ref_id][pos+i-1] = true;
+          if(((mapping_quality&0xE0000000) == 0x00000000) && ((boost::in_degree(node, *p_graph_)*boost::out_degree(node, *p_graph_)) == 0))
+          {
+            if((flag&16) == 0)
+            {
+              f_terminals[ref_id][pos] = node_id;
+              f_match[ref_id][node_id] = match_length;
+            }
+          }
+        }
+
+      }
+    }
+  }
+  fin.clear();
+  fin.close();
+  /*********/
+  t = clock() - t;
+  std::cout << "load terminals takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
+  /*********/
+
+  /* building DisjointSet */
+  /*********/
+  t = clock();
+  /*********/
+  DisjointSet* ds = new DisjointSet();
+  for(auto it_e = boost::edges(*p_graph_).first; it_e != boost::edges(*p_graph_).second; ++it_e)
+  {
+    BoostSTRVertex head = boost::source(*it_e, *p_graph_);
+    BoostSTRVertex tail = boost::target(*it_e, *p_graph_);
+    ds->unionNode((*p_graph_)[head].rid_, (*p_graph_)[tail].rid_);
+  }
+  /*********/
+  t = clock() - t;
+  std::cout << "construct DisjointSet takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
+  /*********/
+
+  /*********/
+  t = clock();
+  /*********/
+  for(int ref_id = 0; ref_id < f_terminals.size(); ref_id++)
+  {
+    auto this_terminal = f_terminals[ref_id];
+    auto it1 = this_terminal.begin();
+    auto it2 = this_terminal.begin();
+    std::string seq = contigs[ref_id];
+
+    // take orphant seq
+    int p = 0, q = 0;
+    while(p < seq.size())
+    {
+      while((p < seq.size()) && taken_2D[ref_id][p]) p++;
+      if(p - q > 100)
+      {
+        std::string new_seq = seq.substr(q, p-q);
+        IntegerVector read_on_this_node, loc_on_this_node;
+        read_on_this_node.push_back(1);
+        loc_on_this_node.push_back(1);
+
+        int new_node_id = p_seq.size();
+        p_seq.push_back(new_seq);
+        p_read_on_node.push_back(read_on_this_node);
+        p_pos_on_node.push_back(loc_on_this_node);
+
+        BoostSTRVertex new_node;
+        if(vertex.count(new_node_id) == 0)
+        {
+          STRVertexType node(new_node_id);
+          new_node = boost::add_vertex(node, *p_graph_);
+          vertex[new_node_id] = new_node;
+        }
+        else
+        {
+          new_node = vertex[new_node_id];
+        }
+      }
+      p++;
+      q = p;
+    }
+
+    // merge
+    if(it2 != this_terminal.end())
+    {
+      // before first
+      int pos1 = it1->first;
+      int node1 = it1->second;
+      int s = pos1-2;
+      while((s>=0) && coverage_2D[ref_id][s]) s--;
+      if(s != (pos1-2))
+      {
+        int first_read_id = p_read_on_node[node1][0];
+        int len = pos1 + p_read_length[first_read_id] - s - 2;
+        //std::cout<<seq<<"\t"<<s+1<<"\t"<<len<<"\n";
+        std::string new_seq = seq.substr(s+1, len);
+	//std::cout<<new_seq<<"\n";
+        IntegerVector read_on_this_node, loc_on_this_node;
+        read_on_this_node.push_back(first_read_id);
+        loc_on_this_node.push_back(pos1 - s + 1);
+
+        int new_node_id = p_seq.size();
+        p_seq.push_back(new_seq);
+        p_read_on_node.push_back(read_on_this_node);
+        p_pos_on_node.push_back(loc_on_this_node);
+
+        BoostSTRVertex new_node;
+        if(vertex.count(new_node_id) == 0)
+        {
+          STRVertexType node(new_node_id);
+          new_node = boost::add_vertex(node, *p_graph_);
+          vertex[new_node_id] = new_node;
+        }
+        else
+        {
+          new_node = vertex[new_node_id];
+        }
+
+        BoostSTRVertex v_target = vertex[node1];
+        std::pair<BoostSTREdge, bool> e_search2 = boost::add_edge(new_node, v_target, *p_graph_);
+        if(!e_search2.second)          std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
+      }
+
+      it2++;
+      for(; it2 != this_terminal.end(); it1++, it2++)
+      {
+        int pos1 = it1->first;
+        int node1 = it1->second;
+        int pos2 = it2->first;
+        int node2 = it2->second;
+        int end = pos1 + f_match[ref_id][node1] - 2;              // coordinate of last nt of node1 on contig
+        if(ds->find(node1) != ds->find(node2)) // node1 and node2 should not be connected!!!
+        {
+          int last_read_id = *(p_read_on_node[node1].end()-1);
+          int first_read_id = p_read_on_node[node2][0];
+          int l1 = p_read_length[last_read_id];
+          int l2 = p_read_length[first_read_id];
+          int y = end + 1 - l1;
+          int z = pos2 + l2 -2;
+          int len = z - y + 1;
+
+          if(len == l1)
+          {
+            BoostSTRVertex v_source = vertex[node1];
+            BoostSTRVertex v_target = vertex[node2];
+            std::pair<BoostSTREdge, bool> e_search1 = boost::add_edge(v_source, v_target, *p_graph_);
+            if(!e_search1.second)          std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
+          }
+          else
+          {
+            std::string new_seq;
+            IntegerVector read_on_this_node, loc_on_this_node;
+            if(len > l1)
+            {
+              new_seq = seq.substr(y, len);
+              read_on_this_node.push_back(last_read_id);
+              read_on_this_node.push_back(first_read_id);
+              loc_on_this_node.push_back(1);
+              loc_on_this_node.push_back(pos2 - y);
+            }
+            else
+            {
+              int cut = end - z + 1;
+              new_seq = "N";
+              read_on_this_node.push_back(-1);
+              loc_on_this_node.push_back(-cut);
+            }
+
+            // add node
+            int new_node_id = p_seq.size();
+            p_seq.push_back(new_seq);
+            p_read_on_node.push_back(read_on_this_node);
+            p_pos_on_node.push_back(loc_on_this_node);
+
+            BoostSTRVertex new_node;
+            if(vertex.count(new_node_id) == 0)
+            {
+              STRVertexType node(new_node_id);
+              new_node = boost::add_vertex(node, *p_graph_);
+              vertex[new_node_id] = new_node;
+            }
+            else
+            {
+              new_node = vertex[new_node_id];
+            }
+
+            BoostSTRVertex v_source = vertex[node1];
+            std::pair<BoostSTREdge, bool> e_search1 = boost::add_edge(v_source, new_node, *p_graph_);
+            if(!e_search1.second)          std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
+
+            BoostSTRVertex v_target = vertex[node2];
+            std::pair<BoostSTREdge, bool> e_search2 = boost::add_edge(new_node, v_target, *p_graph_);
+            if(!e_search2.second)          std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
+          }
+        }
+      }
+      // after last
+      pos1 = it1->first;
+      node1 = it1->second;
+      int e = pos1 + f_match[ref_id][node1]-1;
+      while((e < coverage_2D[ref_id].size()) && coverage_2D[ref_id][e]) e++;
+      if(e != (pos1 + f_match[ref_id][node1]-1))
+      {
+        int last_read_id = p_read_on_node[node1][0];
+        int s = pos1 + f_match[ref_id][node1] - p_read_length[last_read_id] - 1;
+        int len = e - s;
+        std::string new_seq = seq.substr(s, len);
+        IntegerVector read_on_this_node, loc_on_this_node;
+        read_on_this_node.push_back(last_read_id);
+        loc_on_this_node.push_back(1);
+
+        int new_node_id = p_seq.size();
+        p_seq.push_back(new_seq);
+        p_read_on_node.push_back(read_on_this_node);
+        p_pos_on_node.push_back(loc_on_this_node);
+
+        BoostSTRVertex new_node;
+        if(vertex.count(new_node_id) == 0)
+        {
+          STRVertexType node(new_node_id);
+          new_node = boost::add_vertex(node, *p_graph_);
+          vertex[new_node_id] = new_node;
+        }
+        else
+        {
+          new_node = vertex[new_node_id];
+        }
+
+        BoostSTRVertex v_source = vertex[node1];
+        std::pair<BoostSTREdge, bool> e_search1 = boost::add_edge(v_source, new_node, *p_graph_);
+        if(!e_search1.second)          std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
+
+      }
+    }
+  }
+  /*********/
+  t = clock() - t;
+  std::cout << "merge graph takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
+  /*********/
+
+  delete ds;
+}
+
+
+bool thisIsOrphat(std::string& header)
+{
+  boost::char_separator<char> sep(",");
+  boost::tokenizer<boost::char_separator<char> > tokens(header, sep);
+  boost::tokenizer<boost::char_separator<char> >::iterator it;
+  it = tokens.begin();
+  ++it; // discard read_id
+  int i;
+  for(i = 0 ; it != tokens.end(); ++it, ++i) if(i > 3) return false;
+  return (i == 3);
+}
+
+unsigned int goodMapping(std::string& CIAGR, int flag)
+{
+  if((flag&4) == 4)                 return 0x80000000;  // unmap
+  unsigned int match = 0;
+  std::string temp = "";
+  std::string symbols = "";
+  for(int i = 0; i < CIAGR.size(); i++)
+  {
+    if(CIAGR[i] >= '0' && CIAGR[i] <= '9')    temp += CIAGR[i];
+    else
+    {
+        symbols += CIAGR[i];
+        if(CIAGR[i] == 'M') match += std::stoi(temp);
+        temp = "";
+    }
+  }
+  if(match < 100)                   return 0x20000000;  // mapping length too short
+  if(symbols.size() > 2)            return 0x20000000;  // too fragmented
+  if (symbols.size() == 2)
+  {
+    if(((flag&16) == 16) && symbols[1] == 'M')
+                                    return 0x40000000;  // tail unmap
+    if(((flag&16) == 0)  && symbols[1] != 'M')
+                                    return 0x40000000;  // tail unmap
+    return (0x10000000+match);
+  }
+  return match;
+}
+
 
 bool StrGraph::loadAnchor(
   char* pEdgeSet,
@@ -78,6 +533,7 @@ bool StrGraph::parseAnchorLine(
 
   return true;
 }
+
 
 bool StrGraph::loadPredictedEdge(
   char* gffname,
@@ -179,7 +635,8 @@ bool StrGraph::extendGraph(
   path_out.clear();
   path_out.close();
   p_node_id = 0;
-  p_crossed = BooleanVector(p_seq.size(), false);
+  p_crossed_h = BooleanVector(p_seq.size(), false);
+  p_crossed_t = BooleanVector(p_seq.size(), false);
   int anc_count=0;
   size_t total_path = 0;
 
@@ -228,8 +685,10 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
           if(!formCycle(path, new_head))  // no cycle allowed
           {
             path.push_front(new_head);
-            p_crossed[new_head] = true;
+            //p_crossed[new_head] = true;
             int last_read_length;
+	    if(!p_crossed_h[new_head]){
+              p_crossed_h[new_head] = true;
             if(prededge_set.count(new_head) == 0) //unpredicted adjacent edge
             {
               if(!ff_spadesGraph){
@@ -259,6 +718,7 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
                     path.pop_front();
 
             }
+	}
         }
       }
     }
@@ -293,9 +753,11 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
             if(!formCycle(path, new_tail))  // no cycle allowed
             {
               path.push_back(new_tail);
-              p_crossed[new_tail] = true;
+              //p_crossed[new_tail] = true;
               int first_read_length;
-              if(prededge_set.count(new_tail) == 0)
+              if( !p_crossed_t[new_tail]){
+                p_crossed_t[new_tail] = true;
+	      if(prededge_set.count(new_tail) == 0)
               {
                 if(!ff_spadesGraph)
                 {
@@ -319,9 +781,11 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
               else{
 		    //std::cout<<"Pred adj edge(down) : "<<new_tail<<"\n";
                     top_anchor.path = path;
-                    savePath(path_name, top_anchor);
+                    if(ff_spadesGraph)    savePath(path_name, top_anchor.path);
+                    else                  savePath(path_name, top_anchor);
                     path.pop_back();
               }
+	    }
 
             }
         }
@@ -357,8 +821,14 @@ void StrGraph::savePath(char* path_name, const struct anchor& anchor)
     // assembly sequence
     std::string full = p_seq[edge];
     int first_read = p_read_on_node[edge][0];
-    if(it != path.begin()) seq += full.substr(p_read_length[first_read]);
-    else                   seq += full;
+    if(it != path.begin()) 
+	{ 
+	  if(first_read < 0) //merged node
+		seq = seq.substr(0, seq.size() + p_pos_on_node[edge][0]);
+    	  else	seq += full.substr(p_read_length[first_read]);
+	}
+    else
+	seq += full;
     // print reads on path
     IntegerVector reads = p_read_on_node[edge];
     IntegerVector locus = p_pos_on_node[edge];
@@ -398,7 +868,7 @@ bool formCycle(IntegerList & path, int new_tail)
 }
 
 // Reading string graph file input
-bool StrGraph::readSGFile(char* filename)
+bool StrGraph::readSGFile(std::string & filename)
 {
   /** timer **/
   clock_t t;
@@ -406,7 +876,7 @@ bool StrGraph::readSGFile(char* filename)
   /***********/
   std::ifstream fin;
   // fin.open(config.IDIR_GRAPH.c_str());	// open file
-  fin.open(filename);	// open file
+  fin.open(filename.c_str());	// open file
   if (!fin.is_open())	    // fail to open
   {
     std::cout << "Error: " << filename << " doesnot exist!\n";
@@ -414,6 +884,7 @@ bool StrGraph::readSGFile(char* filename)
   }
   else				// succeed to open
   {
+    std::cout<<"Reading String Graph file .. \n";
     std::string line;
     boost::char_separator<char> sep(",");
     boost::tokenizer<boost::char_separator<char> >::iterator it;
@@ -533,7 +1004,7 @@ bool StrGraph::readSGFile(char* filename)
 }
 
 //Reading de Bruijn graph file Input
-bool StrGraph::readSPAdesFile(char* filename, int km)
+bool StrGraph::readSPAdesFile(std::string & filename, int km)
 {
   /** timer **/
   clock_t t;
@@ -541,7 +1012,7 @@ bool StrGraph::readSPAdesFile(char* filename, int km)
   /***********/
   std::ifstream fin;
   // fin.open(config.IDIR_GRAPH.c_str());       // open file
-  fin.open(filename);   // open fileq
+  fin.open(filename.c_str());   // open fileq
   if (!fin.is_open())       // fail to open
   {
     std::cout << "Error: " << filename << " does not exist!\n";

@@ -112,6 +112,10 @@ double parseEvalue(const std::string& e);
 bool formCycle(IntegerList & path, int new_tail);
 void sortAnchor(std::unordered_map<int, anchors>& anchorperf, anchors& anchor_set);
 void concateAnchor(std::unordered_map<int, anchors>& anchorperf, anchors& anchor_set);
+unsigned int goodMapping(std::string& CIAGR, int flag);
+bool goodJunction(BooleanVector& coverage, int pos_i, int pos_j);
+bool thisIsOrphat(std::string& header);
+
 
 class StrGraph {
 private:
@@ -125,6 +129,8 @@ private:
   IntegerVector   p_all_nodes;
   BooleanVector   p_traversed;
   BooleanVector   p_crossed;
+  BooleanVector p_crossed_h;
+  BooleanVector p_crossed_t;
   std::unordered_map<int, BoostSTRVertex> vertex; // both
 
   void markVertexAsTraversed(int v_id);
@@ -133,6 +139,10 @@ private:
   void condense(const BoostSTREdge source_edge,
     std::list<cycle_s>& to_add_cycle);
   std::string RC(int i);
+
+  // for fgs predicted read
+  String2Integer readNameMap;
+  Integer2Integer predMap;
 
   // the string graph
   Integer2Integer p_read_length;
@@ -172,19 +182,25 @@ public:
   void showGraph();
 
   // the overlap graph
+  bool readFGSPredictions(char* fastaname, char* gffname);
   bool readAsqgFile(char* filename);
   void CondenseGraph();
   void writeGraph(char* filename);
 
   // the string graph
-  bool readSGFile(char* filename);
+  bool readSGFile(std::string & filename);
   bool extendGraph(
     char* fgsoutname,
     int MAX_EXTEND_LENGTH,
     char* path_name,
     bool db_flag);
   // SPAdes graph
-  bool readSPAdesFile(char* filename, int km);
+  bool readSPAdesFile(std::string & filename, int km);
   void extendSPAdes(char* path_name, int MAXLEN = 500);
+
+  //merge graph
+  void mergeSG(std::string& sam_name, std::string& contig_name);
+  void writeMergedGraph(std::string & filename);
+
 };
 #endif

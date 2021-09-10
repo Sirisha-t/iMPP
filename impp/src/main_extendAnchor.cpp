@@ -5,7 +5,8 @@ int main(int argc, char* argv[])
   int c, max_length = 150;
   int kmer_len = 0;
   bool ff_graph = false;
-  char* graph_name = (char*)malloc(sizeof(char)*100);
+  std::string graph_name;
+  //char* graph_name = (char*)malloc(sizeof(char)*100);
   char* path_out = (char*)malloc(sizeof(char)*100);
   char* gff_name = (char*)malloc(sizeof(char)*100);
   //std::string graph_name = "", path_out = "", gff_name = "";
@@ -24,13 +25,13 @@ int main(int argc, char* argv[])
   }
   else{
       StrGraph* e_g = new StrGraph();
-      if(kmer_len > 0){
-        e_g->readSPAdesFile(graph_name, kmer_len);
-        ff_graph = true;
-      }
-      else{
-        e_g->readSGFile(graph_name);  
-      }
+      //if(kmer_len > 0){
+       // e_g->readSPAdesFile(graph_name, kmer_len);
+       // ff_graph = true;
+      //}
+     // else{
+      e_g->readSGFile(graph_name);
+
       e_g->extendGraph(gff_name, max_length, path_out, ff_graph);
 
       delete e_g;
