@@ -68,7 +68,7 @@ sga_correct 1
 #specify the correction algorithm to use. ( 0: kmer, 1: hybrid, 2: overlap)
 sga_correct_algo  0
 #Kmer correction params- The length of the kmer to use
-sga_correct_kmer  31
+sga_correct_kmer  15
 #Overlap correction params- minimum overlap required between two reads
 sga_correct_min_olap  45
 
