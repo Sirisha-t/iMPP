@@ -16,7 +16,7 @@ mlen 300
 fgs_complete  0
 ## FGS train option (complete, sanger_5, sanger_10, 454_10, 454_30, illumina_5, or illumina_10)
 ## FGS illumina_5 option for input reads. Rest of the runs are in complete mode by default.
-fgs_train_reads	illumina_5
+fgs_train_reads	illumina_10
 fgs_train_other complete
 ## Filter out FGS ORF prediction with indels (1:true or 0:false).
 fgs_dropindel	0
@@ -46,7 +46,7 @@ sga_index_algorithm 1
 ## overlap (1:true or 0:false)
 sga_overlap 1
 # minimum overlap required between two reads
-sga_overlap_min_len 40
+sga_overlap_min_len 20
 
 ## rmdup (1:true or 0:false)
 sga_rmdup 1
@@ -55,7 +55,7 @@ sga_rmdup 1
 sga_assemble  0
 # Only use overlaps of at least LEN. This can be used to filter the overlap set
 # so that the overlap step only needs to be run once.
-sga_assemble_min_len  40
+sga_assemble_min_len  20
 
 ## merge (1:true or 0:false)
 sga_merge 0
@@ -112,7 +112,7 @@ bwa 1
 # minimum seed length
 bwa_min_seed  19
 # minimum score to output
-bwa_min_score 90
+bwa_min_score 70
 
 
 ##----------------------------
