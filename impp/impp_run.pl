@@ -509,7 +509,8 @@ sub splitPaths
  #print STDERR "\n-----------------------------------------\n";
   print STDERR "\nSplitting path file to long and short ...";
   print STDERR "\n-----------------------------------------\n";
-  $command = $dir."utils/splitFiles.py";
+  $command = "python ";
+  $command .=  $dir."utils/splitFiles.py";
   $command .= " $out_dir/paths.fa";
   $command .=" $freq";
   print "$command\n";
@@ -532,7 +533,8 @@ sub splitEdges
  #print STDERR "\n-----------------------------------------\n";
   print STDERR "\nSplitting edge file to long and short ...";
   print STDERR "\n-----------------------------------------\n";
-  $command = $dir."utils/splitFiles.py";
+  $command = "python ";
+  $command .= $dir."utils/splitFiles.py";
   $command .= " $out_dir/og.merged.fq";
   $command .=" $freq";
   print "$command\n";
