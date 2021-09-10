@@ -132,7 +132,7 @@ callSixFrameFilter();
 callPeptideAssembler();
 
 # Clean up and generate final output of iMPP
-#cleanOutput();
+cleanOutput();
 
 $endtime = time();
 print "\nSuccessfully completed running iMPP in : ";
