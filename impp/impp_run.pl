@@ -198,7 +198,7 @@ sub getOpts
             if( ($forward_file=~ /\.fq$/i || $forward_file=~ /\.fastq$/i) && ($reverse_file=~ /(.*).fq/ || $reverse_file=~ /(.*).fastq/)){
               my($IN1, $IN2);
               mergeFastqFiles();
-              $pairend = 1;
+              $pairend = 0;
             }
             else{
               die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";
@@ -216,7 +216,7 @@ sub getOpts
           if( ($interleaved_file=~ /\.fq$/i || $interleaved_file=~ /\.fastq$/i)){
             $command = "python ".$dir."utils/fastq2fasta.py $interleaved_file $out_dir";
             system( "$command" ) == 0 or die "\nError: Failed to convert input fastq to fasta file: $? \n";
-            $pairend = 1;
+            $pairend = 0;
           }
           else{
             die "\nERROR: Input files must end in .fq or .fastq extension. Please unzip any zipped input files and try again.\n\n";
