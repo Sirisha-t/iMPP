@@ -10,14 +10,14 @@ iMPP is written in C++ and has been tested on a 64-bit Linux system.
 The input for the software are FASTQ sequences, and the output comprises of 4 files:
 1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
 
-==============================================
+
 ### Prerequisites ###
 
 1. gcc compiler (version > 4.8.5)
 2. boost-1.54.0 or newer
 3. perl interpreter
 
-==============================================
+
 ## Instructions to run using Nextflow with Docker ##
 
 Nextflow and Docker would need to be installed to run the software. 
@@ -50,7 +50,6 @@ docker pull tsirisha/impp-nf
 ```
 
 Note: If you are unable to run the script, please check your Docker or Nextflow installation. 
-
 
 
 
@@ -108,7 +107,7 @@ In this example, iMPP will use the preset parameters from the params/parameters.
 The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/impp/params/parameters.txt "parameters.txt")
 
 
-__Output__
+## Output ##
 
 The final iMPP output should contain four files.
 ```
@@ -152,4 +151,3 @@ HLFVTIKEVSDNPVLHPIKTLFIEDLCVDQAARGQKIGDQLYQFAVNYAREIGCYNLTLNVWN
 >6	99-98	3
 AWELMLKAYIINNNGEESIYFKDSKDRTISLENAVE
 ```
-==============================================
