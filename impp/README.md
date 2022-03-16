@@ -1,6 +1,6 @@
 ==============================================
 
-# iMPP: integrated Metagenomic Protein Predictor #
+iMPP: integrated Metagenomic Protein Predictor
 
 ==============================================
 Description:
