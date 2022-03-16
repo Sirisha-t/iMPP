@@ -32,7 +32,7 @@ def translate(offset, seq, out):
 		elif "N" in codon:
 			#out.write("X")
 			out_sixfr += 'X'
-		elif codon in aa_dict:
+		else:
 			#out.write("%s" % aa_dict[codon])
 			out_sixfr += aa_dict[codon]
 	return out_sixfr
@@ -46,34 +46,50 @@ def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout)
 	count = 0
 	for line in lines:
 		count+=1
+		#print count
 		if line.startswith(">"):
 			header = line.strip()
+			seq_dict[header] = ""
 		else:
-			seq = line.strip()
-	# For each sequence call translate on all reading frames
-	seq = seq.upper()
-	seq_rc = Seq(seq)
-	seq_rc = seq_rc.reverse_complement()
-	seq_rc = str(seq_rc)
-	out_sixfr += header+'_frame1\n';
-	out_sixfr += translate(0, seq, out)
-	out_sixfr += '\n';
-	out_sixfr += header+'_frame2\n';
-	out_sixfr += translate(1, seq, out)
-	out_sixfr += '\n';
-	out_sixfr += header+'_frame3\n';
-	out_sixfr += translate(2, seq, out)
-	out_sixfr += '\n';
-	out_sixfr += header+'_frame4\n';
-	out_sixfr += translate(0, seq_rc, out)
-	out_sixfr += '\n';
-	out_sixfr += header+'_frame5\n';
-	out_sixfr += translate(1, seq_rc, out)
-	out_sixfr += '\n';
-	out_sixfr += header+'_frame6\n';
-	out_sixfr += translate(2, seq_rc, out)
-	out_sixfr += '\n';
+			seq_dict[header] += line.strip()
+	# Goes through each sequence and calls 'translate' for all reading frames
+	for item in seq_dict:
+		seq = seq_dict[item].upper()
+		seq_rc = Seq(seq_dict[item].upper())
+		seq_rc = seq_rc.reverse_complement()
+		seq_rc = str(seq_rc)
+		out_sixfr += item+'_frame1\n';
+		#out.write("%s_frame1\n" % item)
+		out_sixfr += translate(0, seq, out)
+		#out.write("\n")
+		out_sixfr += '\n';
+		out_sixfr += item+'_frame2\n';
+		#out.write("%s_frame2\n" % item)
+		out_sixfr += translate(1, seq, out)
+		#out.write("\n")
+		out_sixfr += '\n';
+		out_sixfr += item+'_frame3\n';
+		#out.write("%s_frame3\n" % item)
+		out_sixfr += translate(2, seq, out)
+		#out.write("\n")
+		out_sixfr += '\n';
+		out_sixfr += item+'_frame4\n';
+		#out.write("%s_frame4\n" % item)
+		out_sixfr += translate(0, seq_rc, out)
+		#out.write("\n")
+		out_sixfr += '\n';
+		out_sixfr += item+'_frame5\n';
+		#out.write("%s_frame5\n" % item)
+		out_sixfr += translate(1, seq_rc, out)
+		#out.write("\n")
+		out_sixfr += '\n';
+		out_sixfr += item+'_frame6\n';
+		#out.write("%s_frame6\n" % item)
+		out_sixfr += translate(2, seq_rc, out)
+		out_sixfr += '\n';
+		#out.write("\n")
 
+	#print out_sixfr
 	## Checking if any one of the frames is longer than 20 amino acids
 	if out_sixfr != "":
 		header_info = set()
@@ -89,13 +105,13 @@ def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout)
 				if seq.find('*'):
 					prefix = seq[0:seq.find('*')]
 					if len(prefix) > 20:
-						if header not in header_info :
+						if header not in allpredset and header not in header_info :
 							header_info.add(header)
 							out.write(">"+header+'\n'+readinfo[header]+'\n')
 							predout.write(">"+header+'\n'+readinfo[header]+'\n')
 				else:
 					if len(seq) > 20:
-						if header not in header_info :
+						if header not in allpredset and header not in header_info :
 							header_info.add(header)
 							out.write(">"+header+'\n'+readinfo[header]+'\n')
 							predout.write(">"+header+'\n'+readinfo[header]+'\n')
@@ -112,50 +128,46 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 	seqs_to_be_translated = ""
 	predCount = 0
 	unpredCount = 0
-	count = 0
 	allPredictedReadSet = set()
-	allInputReadSet = set()
 	allPredictedReadSet = read_Predictions.union(EP_predictions)
+	print len(allPredictedReadSet)
 	line = fin.readline()
 	ReadInfo = {}
-	start=time.time()
 	while line:
 		if line[0] == '>':
 			sequence = ""
 			read = line[1:]
 			read = read.rstrip()
-			seq = fin.readline()
-			seq = seq.rstrip()
-			ReadInfo[read] = seq
-			if read in allPredictedReadSet:
+			#read_tag = read[0:read.rfind('/')]
+			if(read in allPredictedReadSet):
+				predCount+=1
+				seq = fin.readline()
+				seq = seq.rstrip()
+				ReadInfo[read] = seq
 				out_header = ">"
 				out_header += read
+				#sequence = out_header + "\n" + seq
 				predictedReadsOutfile.write(out_header)
 				predictedReadsOutfile.write('\n')
 				predictedReadsOutfile.write(seq)
 				predictedReadsOutfile.write('\n')
+			else:
+				unpredCount+=1
+				seq = fin.readline()
+				seq = seq.rstrip()
+				ReadInfo[read] = seq
+				out_header = ">"
+				out_header += read
+				sequence = out_header + '\n' + seq + '\n'
 
-			allInputReadSet.add(read)
-
+			seqs_to_be_translated += sequence
 		line = fin.readline()
 
-	UnPredReadSet = allInputReadSet.difference(allPredictedReadSet)
+	if seqs_to_be_translated != "" :
+		print "predicted :"+str(predCount)
+		print "unpredicted :"+str(unpredCount)
 
-	end=time.time()
-	#print("reading fasta to get unpred set in + getting filtered reads: ")
-	#print((end-start))
-
-	start=time.time()
-	for read in UnPredReadSet:
-		count = count + 1
-		out_header = ">"
-		out_header += read
-		sequence = out_header + '\n' + ReadInfo[read]
-		sixFrameTranslate(sequence, allPredictedReadSet, ReadInfo, translatedReadsOutFile, predictedReadsOutfile)
-		#seqs_to_be_translated += sequence
-	end=time.time()
-
-
+		sixFrameTranslate(seqs_to_be_translated, allPredictedReadSet, ReadInfo, translatedReadsOutFile, predictedReadsOutfile)
 
 def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, input_read, out_name):
 	# Reading FGS predictions on input reads
@@ -164,100 +176,67 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	gff3 = open(path_gff, 'r')
 	readNameMap = {}
 	read_Predictions = set()
-	edgePred = {}
-	pathPred = {}
+	edgePred = set()
+	pathPred = set()
 	## reading reads gff file
-	start = time.time()
 	for line in gff1.readlines():
 		if line[0] != '#':
-			line = line.rstrip().split('\t')
-			rname = line[0];
+			line = line.rstrip()
+			fields = line.split("\t")
+			rname = fields[0];
 			#rname = rname[0:rname.rfind('/')]
 			read_Predictions.add(rname)
-	end = time.time()
-	#print(" Completed reading reads gff file in :")
-	#print((end-start))
-	#print(len(read_Predictions))
-
+	#print " Completed reading reads gff file \n"
+	#print len(read_Predictions)
 	## Reading egde gff file
-	start = time.time()
 	for line in gff2.readlines():
 		if line[0] != '#':
-			line = line.rstrip().split('\t')
-			ename = line[0];
-			fields = ename.rstrip().split(',')
+			line = line.rstrip()
+			fields = line.split("\t")
 			ename = fields[0];
-			#print ename
-			edgePred[ename] = 1;
-	end = time.time()
-	#print(" Completed reading edges gff file in :")
-	#print((end-start))
-	print ("Completed reading edge gff file \n")
+			edgePred.add(ename)
+	#print " Completed reading edge gff file \n"
 	#print len(edgePred)
-	
 	## reading paths gff file
-	start = time.time()
 	for line in gff3.readlines():
 		if line[0] != '#':
-			line = line.rstrip().split('\t')
-			pname = line[0];
-			fields = pname.rstrip().split(',')
+			line = line.rstrip()
+			fields = line.split("\t")
 			pname = fields[0];
-			pathPred[pname] = 1;
-	end = time.time()
-	#print(" Completed reading paths gff file in :")
-	#print((end-start))
-	print (" Completed reading paths gff file \n")
+			pathPred.add(pname)
+	#print " Completed reading paths gff file \n"
 	#print len(pathPred)
-	
 	# Reading bwa mapping of reads to edges file
 	bwaedge = open(bwa_edgename,'r')
 	#print bwaedge
 	EP_predictions = set()
-	start = time.time()
 	for line in bwaedge.readlines():
 		if(line[0] != '@' and line[1] != 'S'):
-			line = line.rstrip().split('\t')
-			edge_read = line[0];
-			flag = line[2]
-			if flag != '*':
-				flag = flag.rstrip().split(',')
-				ename = flag[0];
-				if ename in edgePred:
-					EP_predictions.add(edge_read)
-	end = time.time()
-	#print(" Completed reading bwa-edge file in :")
-	#print((end-start))
-	print (" Completed reading bwa edge file \n")
+			#print line
+			line = line.rstrip()
+			fields = line.split("\t")
+			edge_read = fields[0];
+			flag = fields[2]
+			#print flag
+			if flag != '*' and flag in edgePred:
+				EP_predictions.add(edge_read)
+	#print " Completed reading bwa edge file \n"
 	#print len(EP_predictions)
-	
 	# Reading bwa mapping of reads to paths file
-	start = time.time()
 	bwapath = open(bwa_pathname,'r')
 	for line in bwapath.readlines():
 		if(line[0] != '@' and line[1] != 'S'):
-			line = line.rstrip().split('\t')
-			path_read = line[0];
-			flag = line[2]
-			if flag != '*':
-				flag = flag.rstrip().split(',')
-				pname = flag[0];
-				if pname in pathPred:
-					EP_predictions.add(edge_read)
-	end = time.time()
-	#print(" Completed reading bwa-path file in :")
-	#print((end-start))
-	print (" Completed reading bwa path file \n")
+			line = line.rstrip()
+			fields = line.split("\t")
+			path_read = fields[0];
+			flag = fields[2]
+			if flag != '*' and flag in pathPred:
+				  EP_predictions.add(path_read)
+	#print " Completed reading bwa path file \n"
 	#print len(EP_predictions)
-	
 	if len(read_Predictions) != 0 and len(EP_predictions) != 0:
-		#print("Completed reading input file. Translating the reads now..\n")
-		start = time.time()
+		print "Completed reading input file. Translating the reads now..\n"
 		getSequenceInfo(read_Predictions, EP_predictions, fasta_read, out_name)
-		end = time.time()
-		#print(" Completed running getSequenceInfo function in :")
-		#print((end-start))
-
 
 	gff1.close()
 	gff2.close()

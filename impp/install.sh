@@ -1,12 +1,15 @@
-#! /bin/sh
+#bin/bash
 #
 # Script to install third-party softwares
 #------------------------
 # Pre-requisites needed
 #------------------------
-# cmake
-# zlib
-# gcc
+# cmake :
+# zlib :
+# gcc version:
+#
+#
+#
 
 export IMPP_HOME=`pwd`
 
@@ -27,10 +30,10 @@ make fgs
 #Installing SPAdes
 echo -e "\n\nInstalling SPAdes..."
 cd $IMPP_HOME/lib
-if [ -d SPAdes-3.9.0-Linux ]; then
-        rm -rf SPAdes-3.9.0-Linux
+if [ -d SPAdes-3.15.3-Linux ]; then
+        rm -rf SPAdes-3.15.3-Linux
 fi
-tar xvzf SPAdes-3.9.0-Linux.tar.gz
+tar xvzf SPAdes-3.15.3-Linux.tar.gz
 [ $? -ne 0 ] && exit $?
 
 
@@ -52,7 +55,7 @@ cd $IMPP_HOME/lib
 if [ -d plass ]; then
         rm -rf plass
 fi
-tar xvzf plass-static_sse41.tar.gz
+tar xvzf plass-4-687d7.tar.gz
 
 #Installing SGA (binary version)
 echo -e "\nInstalling SGA..."
@@ -62,11 +65,8 @@ cd $IMPP_HOME/lib
 #fi
 tar xvzf sga-binary-Linux64.tar.gz
 
-##Installing Diamond
-echo -e "\nInstalling Diamond..."
-cd $IMPP_HOME/lib
+##install diamond 
 tar xvzf diamond-linux64.tar.gz
-
 echo -e "\nCompleted installing all third-party tools."
 echo -e "\n----------------------------------------------\n"
 ## IMPP installation

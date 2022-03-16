@@ -57,6 +57,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
   /*********/
   fin.open(contig_name.c_str());
   StringVector contigs;
+  int count = 0;
   String2Integer contigs_id;
   if (!fin.is_open())	    // fail to open
   {
@@ -69,14 +70,16 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
     while(std::getline(fin, line))
     {
       if(line[0]=='>')
-      {
+      {     
         name = line.substr(1);
-        contigs_id[name] = contigs_id.size()-1;
+        contigs_id[name] = contigs_id.size();    
+       
       }
       else
       {
         if(contigs.size() < contigs_id.size())  contigs.push_back("");
-        contigs[contigs.size()-1] += line;
+        contigs[contigs_id.size()-1] += line;
+       
       }
     }
   }
@@ -99,7 +102,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
   fin.open(sam_name.c_str());	// open file
   if (!fin.is_open())	    // fail to open
   {
-    std::cout << "Error: " << sam_name << " doesnot exist!\n";
+    std::cout << "Error: " << sam_name << " does not exist!\n";
   }
   else				// succeed to open
   {
@@ -118,6 +121,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
         ++it;                 // flag
         int flag = std::stoi((*it));
         ++it;                 // reference name
+        std::string cont_name = *it;
         int ref_id = contigs_id[(*it)];
         ++it;                 // pos
         std::string pos_str = (*it);
@@ -125,34 +129,9 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
         ++it;                 // CIAGR
         std::string CIAGR = (*it);
         BoostSTRVertex node = vertex[node_id];
+        //std::cout<<node_id<<"\t"<<header<<"\t"<<ff_orphant_read<<"\t"<<flag<<"\t"<<cont_name<<"\t"<<ref_id<<"\t"<<pos_str<<"\t"<<CIAGR<<"\t"<<node<<"\n";
 
-        // unsigned int mapping_quality = goodMapping(CIAGR, flag);
-        // if(ff_orphant_read)
-        // {
-        //   if(mapping_quality != 0)
-        //   {
-        //     int read_length = p_seq[node_id].size();
-        //     int pos = std::stoi(pos_str);
-        //     for(int i = 0; i < read_length; ++i)
-        //     {
-        //       coverage_2D[ref_id][pos+i-1] = true;
-        //       taken_2D[ref_id][pos+i-1] = true;
-        //     }
-        //   }
-        // }
-        // else
-        // {
-        //   int pos = std::stoi(pos_str);
-        //   for(int i = 0; i < mapping_quality; ++i) taken_2D[ref_id][pos+i-1] = true;
-        //   if((mapping_quality != 0) && ((boost::in_degree(node, *p_graph_)*boost::out_degree(node, *p_graph_)) == 0))
-        //   {
-        //     if((flag&16) == 0)
-        //     {
-        //       f_terminals[ref_id][pos] = node_id;
-        //       f_match[ref_id][node_id] = mapping_quality;
-        //     }
-        //   }
-        // }
+        
         unsigned int mapping_quality = goodMapping(CIAGR, flag);
         if(ff_orphant_read)
         {
@@ -223,7 +202,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
     while(p < seq.size())
     {
       while((p < seq.size()) && taken_2D[ref_id][p]) p++;
-      if(p - q > 100)
+      if(p - q > 200)
       {
         std::string new_seq = seq.substr(q, p-q);
         IntegerVector read_on_this_node, loc_on_this_node;

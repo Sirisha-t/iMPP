@@ -88,6 +88,9 @@ bool StrGraph::readAsqgFile(char* filename)
   std::ifstream fin;
   StringVector p_header;
   String2Integer p_readID;
+  std::string newname = filename;
+      std::string outname = newname.substr(0,newname.find_last_of('.')) + ".wrong.asqg";
+      std::ofstream fout(outname.c_str());
 
   // fin.open(config.IDIR_GRAPH.c_str());	// open file
   fin.open(filename);	// open file
@@ -126,8 +129,9 @@ bool StrGraph::readAsqgFile(char* filename)
     std::cout << "VT takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
     /***********/
     p_order = p_seq.size();
-    p_traversed = BooleanVector(2*p_order, false);
-    p_crossed   = BooleanVector(2*p_order, false);
+    /** remove double node storage **/
+    p_traversed = BooleanVector(p_order, false);
+    p_crossed   = BooleanVector(p_order, false);
     /** timer **/
     t = clock() - t;
     std::cout << "resize takes " << ((double)t)/CLOCKS_PER_SEC << " s\n";
@@ -142,12 +146,12 @@ bool StrGraph::readAsqgFile(char* filename)
         ++it;
         //std::string source = (*it);                         // cont[1], read1 name
         int source_id = p_readID[*it];
-        //int source_id = std::stoi(*it);
-        ++it;
-        //std::string target = (*it);
-        //int target_id = std::stoi(*it);             // cont[2], read2 name
+        ++it;                                                 // cont[2], read2 name
         int target_id = p_readID[*it];
-        ++it;                           // cont[3], A
+        ++it;   
+        if(std::stol(*it) > 100){
+          fout<<line<<"\n";
+        }                        // cont[3], A
         int a = std::stoi(*it);
         ++it;                           // cont[4], B
         int b = std::stoi(*it);
@@ -181,7 +185,7 @@ bool StrGraph::readAsqgFile(char* filename)
           v_source = vertex[source_id];
         }
 
-        if(vertex.count(source_id + p_order) == 0)
+        /*if(vertex.count(source_id + p_order) == 0)
         {
           STRVertexType node(source_id + p_order);
           node.len_ = l1;
@@ -191,7 +195,7 @@ bool StrGraph::readAsqgFile(char* filename)
         else
         {
           v_RC_source = vertex[source_id + p_order];
-        }
+        }*/
 
         if(vertex.count(target_id) == 0)
         {
@@ -205,7 +209,7 @@ bool StrGraph::readAsqgFile(char* filename)
           v_target = vertex[target_id];
         }
 
-        if(vertex.count(target_id + p_order) == 0)
+        /*if(vertex.count(target_id + p_order) == 0)
         {
           STRVertexType node(target_id + p_order);
           node.len_ = l2;
@@ -215,10 +219,10 @@ bool StrGraph::readAsqgFile(char* filename)
         else
         {
           v_RC_target = vertex[target_id + p_order];
-        }
+        }*/
 
 
-        if(source_id != target_id)
+       if(source_id != target_id)
         {
           /* add edge */
           if(ff_RC)         // r2 is reversed
@@ -237,7 +241,7 @@ bool StrGraph::readAsqgFile(char* filename)
                 std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
               }
               /* r2 -> r1' */
-              e_search = boost::add_edge(v_target, v_RC_source, *p_graph_);
+             e_search = boost::add_edge(v_target, v_RC_source, *p_graph_);
               if(e_search.second)
               {
                 (*p_graph_)[e_search.first].p_A = c;
@@ -276,7 +280,7 @@ bool StrGraph::readAsqgFile(char* filename)
             if(a != 0)     // r1->r2
             {
               /* r1 -> r2 */
-              std::pair<BoostSTREdge, bool> e_search = boost::add_edge(v_source, v_target, *p_graph_);
+             std::pair<BoostSTREdge, bool> e_search = boost::add_edge(v_source, v_target, *p_graph_);
               if(e_search.second)
               {
                 (*p_graph_)[e_search.first].p_A = a;
@@ -286,7 +290,7 @@ bool StrGraph::readAsqgFile(char* filename)
                 std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
               }
               /* r2' -> r1' */
-              e_search = boost::add_edge(v_RC_target, v_RC_source, *p_graph_);
+             /* e_search = boost::add_edge(v_RC_target, v_RC_source, *p_graph_);
               if(e_search.second)
               {
                 (*p_graph_)[e_search.first].p_A = l2-1-d;
@@ -294,7 +298,7 @@ bool StrGraph::readAsqgFile(char* filename)
               else
               {
                 std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
-              }
+              }*/
             }
             else            // r2->r1
             {
@@ -309,7 +313,7 @@ bool StrGraph::readAsqgFile(char* filename)
                 std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
               }
               /* r1' -> r2' */
-              e_search = boost::add_edge(v_RC_source, v_RC_target, *p_graph_);
+             /* e_search = boost::add_edge(v_RC_source, v_RC_target, *p_graph_);
               if(e_search.second)
               {
                 (*p_graph_)[e_search.first].p_A = l1-1-b;
@@ -317,14 +321,13 @@ bool StrGraph::readAsqgFile(char* filename)
               else
               {
                 std::cout << "Error:: StringGraph::LoadGraph: Failed to add edges between vertices!\n";
-              }
+              }*/
             }
           }
         }
 
     }
-    //else
-      //std::cout<<source<<"\t"<<target<<"\n";
+   
     }
   }
     while(std::getline(fin, line));
@@ -370,7 +373,8 @@ void StrGraph::CondenseGraph()
   std::list<cycle_s> to_add_cycle;
   int cnt_cycle_node = 0;
   double condeseSE = 0, condenseCycle = 0, findComponent = 0;
-  BooleanVector connected = BooleanVector(2*p_order, false);
+  // remove double nodes -- test cz asqg
+  BooleanVector connected = BooleanVector(p_order, false);
   for(auto it = boost::vertices(*p_graph_).first; it != boost::vertices(*p_graph_).second; ++it)
   {
     if(! p_crossed[ (*p_graph_)[*it].rid_ ]) // untraversed vertex, new component
@@ -383,6 +387,7 @@ void StrGraph::CondenseGraph()
       int cnt_vertex = 0;
       while(!to_visit.empty())
       {
+        
         BoostSTRVertex top_vertex = to_visit.top();
         to_visit.pop();
         int rid = (*p_graph_)[top_vertex].rid_;
@@ -394,8 +399,8 @@ void StrGraph::CondenseGraph()
           this_component.push_back(top_vertex);
           ++cnt_vertex;
           p_crossed[rid] = true;
-          if(rid < p_order) p_crossed[rid+p_order] = true;
-          else              p_crossed[rid-p_order] = true;
+          //if(rid < p_order) p_crossed[rid+p_order] = true;
+          //else              p_crossed[rid-p_order] = true;
           for(auto it_v = boost::adjacent_vertices(top_vertex, *p_graph_).first; it_v != boost::adjacent_vertices(top_vertex, *p_graph_).second; ++it_v)
           {
             if(!connected[ (*p_graph_)[*it_v].rid_ ]) to_visit.push(*it_v);
