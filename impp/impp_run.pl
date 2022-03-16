@@ -6,6 +6,11 @@ use File::Basename;
 use File::Path;
 
 my @exts = qw(.fq .fastq);
+my $edge_time;
+my $read_time;
+my $path_time;
+my $assembly_time;
+my $spades_assembly_file = "";
 my $assembly_type = "";
 my $single_file = "";
 my $forward_file = "";
@@ -134,9 +139,12 @@ callPeptideAssembler();
 # Clean up and generate final output of iMPP
 cleanOutput();
 
+# Print total time for each category
+printTotalTime();
+
 $endtime = time();
 print "\nSuccessfully completed running iMPP in : ";
-getElapsedTime($endtime - $start);
+print(getElapsedTime($endtime - $start));
 print "\n";
 
 #====================================================================
@@ -214,7 +222,7 @@ sub getOpts
       else{
         if(! -z $interleaved_file){
           if( ($interleaved_file=~ /\.fq$/i || $interleaved_file=~ /\.fastq$/i)){
-            $command = "python ".$dir."utils/fastq2fasta.py $interleaved_file $out_dir";
+           # $command = "python ".$dir."utils/fastq2fasta.py $interleaved_file $out_dir";
             system( "$command" ) == 0 or die "\nError: Failed to convert input fastq to fasta file: $? \n";
             $pairend = 0;
           }
@@ -296,9 +304,13 @@ sub callFGS_Reads
   system( "$command" ) == 0 or die "Error: Could not call FragGeneScan on reads: $?";
 
   $endtime = time();
+  $read_time = getElapsedTime($endtime - $starttime);
   print STDERR "\n-----------------------------------------\n";
-  print "FragGeneScan run on reads completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print "\n\n";
+  print "FragGeneScan run on reads completed in : \n\n";
+  print "$read_time\n";
+  #getElapsedTime($endtime - $starttime);
+  print "\n\n";
   print STDERR "\n-----------------------------------------\n";
 
 }
@@ -312,6 +324,7 @@ sub callAssembly
   if($assembly_type == 0)
   {
 
+=begin comment
     #print STDERR "\n-----------------------------------------\n";
     print STDERR "\nRunning SGA assembler on input reads ...\n";
     print STDERR "\n-----------------------------------------\n";
@@ -335,7 +348,7 @@ sub callAssembly
       elsif($sga_correct_algo == 2) { $command .= " -a overlap";}
       system( "$command" ) == 0 or die "Error: Failed to run sga correct: $?";
 
-      ##index the correct assembly file
+      ##index the corrected assembly file
       $command = "$SGA_BIN index -t $ncpu -a ropebwt assembly.ec.fq";
       system( "$command" ) == 0 or die "Error: Failed to run sga index on corrected reads: $?";
     }
@@ -371,29 +384,33 @@ sub callAssembly
   else {
     print "\n Cannot open $olap_file";
   }
+  ## Modifiying the asqg file to resolve orientation
+ # $command = $dir."bin/impp_modASQG";
+ # $command .= " -g $out_dir/assembly.ec.rmdup.asqg";
+ # system( "$command" ) == 0 or die "Error: Failed to get sga string graph from overlap graph: $?";
+  
+  ##Getting string graph from overlap graph
+ # $command = $dir."bin/impp_getSG";
+ # $command .= " -g $out_dir/assembly.ec.rmdup.mod.asqg -r $out_dir/reads.fasta -f $out_dir/reads.gff";
+ # system( "$command" ) == 0 or die "Error: Failed to get sga string graph from overlap graph: $?";
 
-  $command = $dir."bin/impp_getSG";
-  $command .= " -g $out_dir/assembly.ec.rmdup.asqg -r $out_dir/reads.fasta -f $out_dir/reads.gff";
-  system( "$command" ) == 0 or die "Error: Failed to get sga string graph from overlap graph: $?";
-
-  $command = "mv $out_dir/assembly.ec.rmdup.StringGraph.fq  $out_dir/og.fq";
-  system($command);
-  $assembly_file = $out_dir."/og.fq";
+  #$command = "mv $out_dir/assembly.ec.rmdup.mod.StringGraph.fq  $out_dir/og.fq";
+  #system($command);
+  #$assembly_file = $out_dir."/og.fq";
 
   $endtime = time();
 
   print STDERR "\n-----------------------------------------\n";
   print STDERR "\nSGA assembly run completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print (getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
 
-  # Calling FGS on assembly edges
-  #callFGS_Edges();
-  #}
-  #elsif ($assembly_type == 1 )
-  #{
-  ## call SPAdes assembler
-  my $SPAdes_bin= $dir."lib/SPAdes-3.9.0-Linux/bin/spades.py";
+  $edge_time += ($endtime - $starttime);
+=end comment 
+=cut
+ 
+ ## Calling SPAdes assembler
+  my $SPAdes_bin= $dir."lib/SPAdes-3.15.3-Linux/bin/spades.py";
   $command = "$SPAdes_bin -t $ncpu -m $spades_mem_limit -o $out_dir/spades/assembly";
   if ($pairend) { $command .= " --12 $reads_fq"; }
   else {  $command .= " -s $reads_fq" ;}
@@ -410,16 +427,21 @@ sub callAssembly
   $command .= $dir."utils/renameDB.py";
   $command .= " $out_dir/spades/assembly/assembly_graph.fastg";
   system( "$command" ) == 0 or die "Error: Failed to run modify de bruijn graph file: $?";
-  #$assembly_file = $out_dir."/spades/assembly/assembly_graph.dbGraph.fq";
+  $spades_assembly_file = $out_dir."/spades/assembly/assembly_graph.dbGraph.fq";
 
+  $command = "cp $spades_assembly_file $out_dir/og.merged.fq";
+  system("$command") == 0 or die "Error: Failed to copy spades file: $?";
+  
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print STDERR "SPAdes assembly run completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print (getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
 
+  $edge_time += ($endtime - $starttime);
+
   ## Getting kmer Length
-  open( DB, '<', $assembly_file ) or die $!;
+  open( DB, '<', $spades_assembly_file ) or die $!;
   while( my $line = <DB> ){
     chomp $line;
     if ( $line =~ /^(>.*)$/ ){
@@ -433,7 +455,7 @@ sub callAssembly
       elsif( $lseq < $kmin) { $kmin = $lseq;}
     }
   }
-
+=begin comment
   ## Running bwa on SPAdes contigs
   my $starttime = time();
   print STDERR "\nRunning BWA index (spades contig)...\n";
@@ -444,20 +466,23 @@ sub callAssembly
   system( "$command" ) == 0 or die "Error: Failed to run bwa index on spades contig: $?";
 
 
-  print STDERR "\nRunning BWA mem...\n";
-  $command = $dir."lib/bwa-0.7.17/"."bwa mem";
-  $command .= " $out_dir/spades/contigs.index";
-  $command .= " $assembly_file";
-  $command .= " -p" if $pairend;
-  $command .= " -T 45";
-  $command .= " -t $ncpu -k $bwa_min_seed"; ## removed -a option
-  $command .= " -o $out_dir/og.sam";
-  print "$command\n";
-  system( "$command" ) == 0 or die "Error: Failed to run bwa mem on edges: $?";
+ # print STDERR "\nRunning BWA mem...\n";
+ # $command = $dir."lib/bwa-0.7.17/"."bwa mem";
+ # $command .= " $out_dir/spades/contigs.index";
+ # $command .= " $assembly_file";
+ # $command .= " -p" if $pairend;
+ # $command .= " -T 45";
+ # $command .= " -t $ncpu -k $bwa_min_seed"; ## removed -a option
+ # $command .= " -o $out_dir/og.sam";
+ # print "$command\n";
+ # system( "$command" ) == 0 or die "Error: Failed to run bwa mem on edges: $?";
   $endtime = time();
   print "Time taken to complete bwa run on spades contig: \t";
-  getElapsedTime($endtime - $starttime);
+  print (getElapsedTime($endtime - $starttime));
   print "\n";
+=end comment
+=cut
+  $edge_time += ($endtime - $starttime);
 
 
 }
@@ -492,8 +517,9 @@ sub callMergeSG
 
   print STDERR "\n-----------------------------------------\n";
   print "Time taken to merge graphs : ";
-  getElapsedTime($endtime - $starttime);
+  print (getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $edge_time += ($endtime - $starttime);
 
 
 }
@@ -518,8 +544,9 @@ sub splitPaths
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "split run on paths completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $path_time += ($endtime - $starttime);
 
 }
 
@@ -529,6 +556,10 @@ sub splitPaths
 #====================================================================
 sub splitEdges
 {
+  $spades_assembly_file = $out_dir."/spades/assembly/assembly_graph.dbGraph.fq";
+  $command = "cp $spades_assembly_file $out_dir/og.merged.fq";
+  system("$command") == 0 or die "Error: Failed to copy spades file: $?";
+  
   $starttime = time();
  #print STDERR "\n-----------------------------------------\n";
   print STDERR "\nSplitting edge file to long and short ...";
@@ -542,8 +573,9 @@ sub splitEdges
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "split run on edges completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $edge_time += ($endtime - $starttime);
 
 }
 
@@ -568,8 +600,9 @@ sub callFGS_SplitEdges
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "FragGeneScan run on edges completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $edge_time += ($endtime - $starttime);
 
   $starttime = time();
  #print STDERR "\n-----------------------------------------\n";
@@ -587,8 +620,9 @@ sub callFGS_SplitEdges
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "FragGeneScan run on edges completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $edge_time += ($endtime - $starttime);
 
   $command = "cat $out_dir/edges.long.$freq.out $out_dir/edges.short.$freq.out > $out_dir/edges.merged.$freq.out";
   system($command);
@@ -598,6 +632,7 @@ sub callFGS_SplitEdges
   system($command);
   $command = "cat $out_dir/edges.long.$freq.faa $out_dir/edges.short.$freq.faa > $out_dir/edges.merged.$freq.faa";
   system($command);
+  
 }
 
 
@@ -623,8 +658,9 @@ sub callFGS_Paths
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "FragGeneScan run on paths completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $path_time += ($endtime - $starttime);
 
   $starttime = time();
   #print STDERR "\n-----------------------------------------\n";
@@ -642,8 +678,9 @@ sub callFGS_Paths
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "FragGeneScan run on paths completed in : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $path_time += ($endtime - $starttime);
 
   $command = "cat $out_dir/paths.long.$freq.out $out_dir/paths.short.$freq.out > $out_dir/paths.merged.$freq.out";
   system($command);
@@ -682,8 +719,9 @@ sub callBWA
   system( "$command" ) == 0 or die "Error: Failed to run bwa mem on edges: $?";
   $endtime = time();
   print "Time taken to complete bwa run on edges: \t";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print "\n";
+  $edge_time += ($endtime - $starttime);
 
   $starttime = time();
   print STDERR "\nRunning BWA index (paths)...\n";
@@ -706,8 +744,9 @@ sub callBWA
 
   $endtime = time();
   print "Time taken to complete bwa run on paths : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print "\n";
+  $path_time += ($endtime - $starttime);
 }
 
 
@@ -733,8 +772,9 @@ sub callIMPP
 
   print STDERR "\n-----------------------------------------\n";
   print "Time taken to find and extend Anchors : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $path_time += ($endtime - $starttime);
 }
 
 
@@ -748,7 +788,7 @@ sub callSixFrameFilter
   print STDERR "\nRunning six frame translation filter on any un-called reads..";
   print STDERR "\n---------------------------------------------------------------\n";
   my $command = "python3 ";
-  $command .= $dir."utils/sixFrameTranslate.py";
+  $command .= $dir."utils/sixFrameTranslate.time.p3.py";
   $command .= " $out_dir/reads.gff ";
   $command .= " $out_dir/edges.merged.$freq.gff ";
   $command .= " $out_dir/paths.merged.$freq.gff ";
@@ -761,7 +801,8 @@ sub callSixFrameFilter
 
   #print STDERR "\n-----------------------------------------\n";
   print "Time taken to generate six frame translation : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
+  $assembly_time += ($endtime - $starttime);
   print STDERR "\n-----------------------------------------\n";
   $command = "mv $out_dir/reads.filter.fasta $out_dir/reads.filter.$bwa_min_score.fasta";
   system($command);
@@ -779,6 +820,7 @@ sub callPeptideAssembler
   $starttime = time();
   print STDERR "\nGenerating peptide assembly..\n";
   print STDERR "\n-----------------------------------------\n";
+=begin comment
   if ( -e $out_dir."/assembled_proteins.$bwa_min_score.faa")
   {
     $command = "rm -f $out_dir/assembled_proteins.$bwa_min_score.faa";
@@ -802,8 +844,9 @@ sub callPeptideAssembler
 
   print STDERR "\n-----------------------------------------\n";
   print "Time taken to complete peptide assembly : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $assembly_time += ($endtime - $starttime);
 
   print STDERR "\nFiltering plass generated contigs..\n";
   print STDERR "\n-----------------------------------------\n";
@@ -812,7 +855,8 @@ sub callPeptideAssembler
   $command .= $dir."utils/renamePlassContig.py";
   $command .= " $out_dir/assembled_proteins.$bwa_min_score.faa";
   system( "$command" ) == 0 or die "Error: Failed to filter plass contigs: $?";
-
+=end comment
+=cut
   ##getting mapping of six frame translated reads to plass contigs -- using diamond Blastx
   $command = $dir."lib/diamond";
   $command .= " makedb --in $out_dir/assembled_proteins.$bwa_min_score.re.60.faa -d $out_dir/plass_contig.index";
@@ -852,8 +896,9 @@ sub callPeptideAssembler
   $endtime = time();
   print STDERR "\n-----------------------------------------\n";
   print "Time taken to complete peptide contigs filtering : ";
-  getElapsedTime($endtime - $starttime);
+  print(getElapsedTime($endtime - $starttime));
   print STDERR "\n-----------------------------------------\n";
+  $assembly_time += ($endtime - $starttime);
 
 }
 
@@ -865,7 +910,7 @@ sub mergeFastqFiles
   open ($IN1,'<', $forward_file);
   open ($IN2, '<' ,$reverse_file);
   open (my $mergedFastq, '>', $out_dir."/reads.merged.fq");
-  while(<$IN1>) {
+   while(<$IN1>) {
     print $mergedFastq $_;
     $_ = <$IN1>;
     print $mergedFastq $_;
@@ -1064,6 +1109,22 @@ sub getElapsedTime
   $hour = $input;
 
   $str = $hour . " hours " . $min . " minutes and " . $sec . " seconds.\n";
-  print $str;
+  return($str);
+  #print "\n";
+}
+
+sub printTotalTime
+{
+
+  print "\n\nTime elapsed for each category\n\n";
+  print "------------------------------------------\n";
+  print "Reads :\t$read_time\n";
+  print "iMPP(Edge):\t";
+  print(getElapsedTime($edge_time));
+  print "\niMPP(Path):\t";
+  print(getElapsedTime($path_time));
+  print "\niMPP(Assembly):\t";
+  print(getElapsedTime($assembly_time));
   print "\n";
+  print "--------------------------------------------\n";
 }

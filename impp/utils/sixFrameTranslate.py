@@ -46,15 +46,11 @@ def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout)
 	count = 0
 	for line in lines:
 		count+=1
-		#print count
 		if line.startswith(">"):
 			header = line.strip()
-			#seq_dict[header] = ""
 		else:
-			#seq_dict[header] += line.strip()
 			seq = line.strip()
-	# Goes through each sequence and calls 'translate' for all reading frames
-	#for item in seq_dict:
+	# For each sequence call translate on all reading frames
 	seq = seq.upper()
 	seq_rc = Seq(seq)
 	seq_rc = seq_rc.reverse_complement()
@@ -78,7 +74,6 @@ def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout)
 	out_sixfr += translate(2, seq_rc, out)
 	out_sixfr += '\n';
 
-	#print out_sixfr
 	## Checking if any one of the frames is longer than 20 amino acids
 	if out_sixfr != "":
 		header_info = set()
@@ -121,7 +116,6 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 	allPredictedReadSet = set()
 	allInputReadSet = set()
 	allPredictedReadSet = read_Predictions.union(EP_predictions)
-	#print len(allPredictedReadSet)
 	line = fin.readline()
 	ReadInfo = {}
 	start=time.time()
@@ -160,23 +154,7 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 		sixFrameTranslate(sequence, allPredictedReadSet, ReadInfo, translatedReadsOutFile, predictedReadsOutfile)
 		#seqs_to_be_translated += sequence
 	end=time.time()
-	#print("looping through unpred set + calling sixf: ")
-	#print((end-start))
-	#print (count)
 
-	#print("all input set count :")
-	#print(len(allInputReadSet))
-	#print("all pred set count :")
-	#print(len(allPredictedReadSet))
-	#print("unpred set count :")
-	#print(len(UnPredReadSet))
-
-	#if seqs_to_be_translated != "" :
-	#	start=time.time()
-	#	sixFrameTranslate(seqs_to_be_translated, allPredictedReadSet, ReadInfo, translatedReadsOutFile, predictedReadsOutfile)
-	#	end=time.time()
-	#	print("six frame translate func completed in :")
-	#	print((end-start))
 
 
 def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, input_read, out_name):
@@ -200,6 +178,7 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	#print(" Completed reading reads gff file in :")
 	#print((end-start))
 	#print(len(read_Predictions))
+
 	## Reading egde gff file
 	start = time.time()
 	for line in gff2.readlines():
@@ -215,6 +194,7 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	#print((end-start))
 	print ("Completed reading edge gff file \n")
 	#print len(edgePred)
+	
 	## reading paths gff file
 	start = time.time()
 	for line in gff3.readlines():
@@ -229,6 +209,7 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	#print((end-start))
 	print (" Completed reading paths gff file \n")
 	#print len(pathPred)
+	
 	# Reading bwa mapping of reads to edges file
 	bwaedge = open(bwa_edgename,'r')
 	#print bwaedge
@@ -236,11 +217,9 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	start = time.time()
 	for line in bwaedge.readlines():
 		if(line[0] != '@' and line[1] != 'S'):
-			#print line
 			line = line.rstrip().split('\t')
 			edge_read = line[0];
 			flag = line[2]
-			#print flag
 			if flag != '*':
 				flag = flag.rstrip().split(',')
 				ename = flag[0];
@@ -251,6 +230,7 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	#print((end-start))
 	print (" Completed reading bwa edge file \n")
 	#print len(EP_predictions)
+	
 	# Reading bwa mapping of reads to paths file
 	start = time.time()
 	bwapath = open(bwa_pathname,'r')
@@ -269,6 +249,7 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 	#print((end-start))
 	print (" Completed reading bwa path file \n")
 	#print len(EP_predictions)
+	
 	if len(read_Predictions) != 0 and len(EP_predictions) != 0:
 		#print("Completed reading input file. Translating the reads now..\n")
 		start = time.time()
