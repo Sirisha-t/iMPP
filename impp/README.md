@@ -1,8 +1,8 @@
-==============================================
+==========================================================================
 
 # iMPP: integrated Metagenomic Protein Predictor #
 
-==============================================
+==========================================================================
 ### Description ###
 
 iMPP is a tool designed to predict and assemble peptides from short fragmentary reads.
@@ -104,7 +104,8 @@ $ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/pa
 ```
 
 In this example, iMPP will use the preset parameters from the params/parameters.txt file.
-The defult parameters used to run iMPP can be found here: [default_parameters](https://github.com/Sirisha-t/iMPP/blob/master/impp/params/parameters.txt "parameters.txt")
+
+The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/impp/params/parameters.txt "parameters.txt")
 
 
 __Output__
