@@ -28,7 +28,7 @@ curl -fsSL https://get.nextflow.io | bash
 ```
 You can then run the command:
 ```
-nextflow run tsirisha/impp-nf --12 reads.fq -o output_dir
+nextflow run tsirisha/impp-nf --12 reads.fq -outdir output_dir
 
 ```
 The input parameters can be modified based on the parameter options provided below:
