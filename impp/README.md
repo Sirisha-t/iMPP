@@ -27,14 +27,19 @@ Nextflow and Docker would need to be installed to run the software.
 Step 1: Clone the repository:
 ```
 $git clone https://github.com/Sirisha-t/iMPP.git
-```
+
 cd to the project direcorty (i.e. /impp)
+```
 
 Step 2: Install Nextflow
 The below command can be copied to the terminal to install nextflow:
 ```
 curl -fsSL https://get.nextflow.io | bash
+
+[Note: Make the binary executable on your system by running chmod +x nextflow]
+
 ```
+
 Step 3: Run Nextflow script (with docker)
 ```
 nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
