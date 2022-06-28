@@ -15,6 +15,7 @@ params.maxlen = 150
 params.help = false
 params.spadesdir = "spades"
 params.freq = 120
+params.kmin = 55
 
 /** Print help message **/
 def helpMessage(){
