@@ -14,7 +14,7 @@ params.threads = 8
 params.maxlen = 150
 params.help = false
 params.spadesdir = "spades"
-
+params.freq = 120
 
 /** Print help message **/
 def helpMessage(){
