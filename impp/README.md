@@ -22,36 +22,45 @@ The input for the software are FASTQ sequences, and the output comprises of 4 fi
 
 Nextflow and Docker would need to be installed to run the software. 
 
+```
+Step 1: Clone the repository:
+$git clone https://github.com/Sirisha-t/iMPP.git
+
+Step 2: Install Nextflow
 The below command can be copied to the terminal to install nextflow:
 ```
 curl -fsSL https://get.nextflow.io | bash
 ```
-You can then run the command:
+Step 3: Run Nextflow script (with docker)
 ```
-nextflow run tsirisha/impp-nf --12 reads.fq -outdir output_dir
+nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
+Eg: nextflow run main.nf --single data/input.fastq.gz --outdir output
 
 ```
 The input parameters can be modified based on the parameter options provided below:
 ```
-	 --12  		 <filename>    :	 fastq file with interlaced forward and reverse paired-end reads
- 	 --1             <filename>    :	 fastq file with forward paired-end reads
- 	 --2	 	 <filename>    :	 fastq file with reverse paired-end reads
- 	 --s	  	 <filename>    :	 fastq file with unpaired reads
- 	 --assembler     <0 or 1>      :         type of assembler to run (0: sga, 1: spades)
-	 --genecaller	 <fgs or mpd>  :         type of gene caller to run
- 	 --outdir        <dirname>     :         output directory name including the full path
- 	 --max-len       <int>         :         maximum extension length for anchors (default: 300) 
- 	 --param-file    <filename>    :         parameter file
-```
+USAGE: nextflow run main.nf --single [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
+ Input data options:
+   -profile               <string>      : [required] docker and base/test
+   --interleaved          <filename>    : fastq file with interlaced forward and reverse paired-end reads
+   --forward              <filename>    : fastq file with forward paired-end reads
+   --reverse              <filename>    : fastq file with reverse paired-end reads
+   --single               <filename>    : fastq file with unpaired reads
+   --outdir               <dirname>     : [required] output directory name including the full path [default: output]
+   --genecaller           <string>      : [optional] fgs or prodigal [default: fgs]
+   --threads              <int>         : [optional] number of threads [default: 16]
+   --maxlen               <int>         : [optional] maximum extension length for anchors [default: 150]
+   -h/--help                            :  help message
 
-The docker image impp-nf will can also be pulled before running the above command:
-```
-docker pull tsirisha/impp-nf
+  NOTE: Input FASTQ read file must be specified in either --interleaved, --forward & --reverse or --single format.
 ```
 
 Note: If you are unable to run the script, please check your Docker or Nextflow installation. 
 
-
+Optional: You can run a test with the following command:
+```
+ nextflow run main.nf -profile test,docker
+```
 
 ## Instructions to install locally ##
 
