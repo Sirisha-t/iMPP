@@ -28,8 +28,8 @@ Step 1: Clone the repository:
 ```
 $git clone https://github.com/Sirisha-t/iMPP.git
 
-cd to the project direcorty (i.e. /impp)
 ```
+cd to the project directory (i.e. /impp)
 
 Step 2: Install Nextflow
 The below command can be copied to the terminal to install nextflow:
