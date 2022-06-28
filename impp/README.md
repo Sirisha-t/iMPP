@@ -35,7 +35,8 @@ curl -fsSL https://get.nextflow.io | bash
 Step 3: Run Nextflow script (with docker)
 ```
 nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
-Eg: nextflow run main.nf --single data/input.fastq.gz --outdir output
+
+Eg: nextflow run main.nf --single data/input.fastq.gz --outdir output -profile base, docker
 
 ```
 The input parameters can be modified based on the parameter options provided below:
@@ -58,7 +59,7 @@ USAGE: nextflow run main.nf --single [other options] <fastq file/s> --outdir <ou
 
 Note: If you are unable to run the script, please check your Docker or Nextflow installation. 
 
-Optional: You can run a test with the following command:
+You can run a test with the following command:
 ```
  nextflow run main.nf -profile test,docker
 ```
