@@ -9,11 +9,12 @@ params.interleaved = null
 params.forward = null
 params.reverse = null
 params.single = null
-params.outdir = "${workflow.projectDir}/output"
 params.genecaller = "fgs"
 params.threads = 8
 params.maxlen = 150
 params.help = false
+params.spadesdir = "spades"
+
 
 /** Print help message **/
 def helpMessage(){
