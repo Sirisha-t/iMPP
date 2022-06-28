@@ -22,10 +22,11 @@ The input for the software are FASTQ sequences, and the output comprises of 4 fi
 
 Nextflow and Docker would need to be installed to run the software. 
 
-```
-Step 1: Clone the repository:
-$git clone https://github.com/Sirisha-t/iMPP.git
 
+Step 1: Clone the repository:
+```
+$git clone https://github.com/Sirisha-t/iMPP.git
+```
 Step 2: Install Nextflow
 The below command can be copied to the terminal to install nextflow:
 ```
