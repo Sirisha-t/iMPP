@@ -35,10 +35,8 @@ Step 2: Install Nextflow
 The below command can be copied to the terminal to install nextflow:
 ```
 curl -fsSL https://get.nextflow.io | bash
-
-[Note: Make the binary executable on your system by running chmod +x nextflow]
-
 ```
+[Note: Make the binary executable on your system by running chmod +x nextflow]
 
 Step 3: Run Nextflow script (with docker)
 ```
