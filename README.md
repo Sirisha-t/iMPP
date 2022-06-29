@@ -17,6 +17,7 @@ The input for the software are FASTQ sequences, and the output comprises of 4 fi
 2. boost-1.54.0 or newer
 3. perl interpreter
 4. python (version >= 2.7)
+5. Bash 3.2 (or later) and Java 11 (or later, up to 18) [for Nextflow]
 
 
 ## Instructions to run using Nextflow with Docker ##
