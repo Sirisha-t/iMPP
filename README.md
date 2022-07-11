@@ -102,17 +102,19 @@ USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [othe
 
   NOTE: Input FASTQ read file must be specified in either --interleaved, --forward & --reverse or --single format.
 ```
+*The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/params/parameters.txt "parameters.txt")
 
-Note: If you are unable to run the script, please check your Docker or Nextflow installation. 
 
-You can run a test with the following command:
+*Note: If you are unable to run the script, please check your Docker or Nextflow installation. 
+
+*You can run a test with the following command:
 ```
  nextflow run main.nf -profile test,docker
  
  [This will automatically read the sample input file from the /data folder]
  
 ```
-To resume workflow execution from where it stopped, use the '-resume' command as shown below:
+*To resume workflow execution from where it stopped, use the '-resume' command as shown below:
 ```
 nextflow run main.nf -profile test,docker -resume
 ```
@@ -169,7 +171,7 @@ $ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/pa
 
 In this example, iMPP will use the preset parameters from the params/parameters.txt file.
 
-The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/impp/params/parameters.txt "parameters.txt")
+The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/params/parameters.txt "parameters.txt")
 
 
 ## Output ##
