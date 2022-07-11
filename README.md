@@ -9,7 +9,7 @@ iMPP is a tool designed to predict genes and assemble peptides from short fragme
 iMPP is written in C++ and has been tested on a 64-bit Linux system.
 
 The input for the software are FASTQ sequences, and the output comprises of four files:
-1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
+* predicted genes (nucl) * predicted peptides (prot) * gene predictions in gff format * assembled peptide sequences (prot).
 
 The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/index.html), since it supports the use of [Docker](https://www.docker.com/) containers. 
 
@@ -71,7 +71,7 @@ nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile 
 For paired end:
 nextflow run main.nf --forward <forward_fastq_file> --reverse <reverse_fastq_file> --outdir <output_dir> -profile base,docker
 OR
-nextflow run main.nf --interleaves <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
+nextflow run main.nf --interleaved <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
 
 
 Example:
