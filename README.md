@@ -39,10 +39,9 @@ __Install Nextflow__
 ```
 curl -fsSL https://get.nextflow.io | bash
 
-Add Nextflow binary to your user's PATH:
-mv nextflow ~/bin/
-OR system-wide installation:
-sudo mv nextflow /usr/local/bin
+Make the binary executable on your system by running chmod +x nextflow.
+
+Optionally, move the nextflow file to a directory accessible by your $PATH variable. 
 ```
 
 __Install Docker__
@@ -64,7 +63,7 @@ $git clone https://github.com/Sirisha-t/iMPP.git
 ```
 Step 2: Go to the project directory (/iMPP)
 ```
-$cd iMPP
+$cd iMPP/
 ```
 Step 3: Run Nextflow script
 ```
