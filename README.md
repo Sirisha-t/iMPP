@@ -74,7 +74,7 @@ OR
 nextflow run main.nf --interleaves <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
 
 
-Eg:
+Example:
 for single end: 
 nextflow run main.nf --single data/reads.fq.gz --outdir output -profile base, docker
 
@@ -84,7 +84,7 @@ OR
 nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base, docker
 
 ```
-The input parameters can be modified based on the parameter options provided below:
+* The input parameters can be modified based on the parameter options provided below:
 ```
 USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
