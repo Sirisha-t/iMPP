@@ -7,7 +7,8 @@
 
 iMPP is a tool designed to predict genes and assemble peptides from short fragmentary reads.
 iMPP is written in C++ and has been tested on a 64-bit Linux system.
-The input for the software are FASTQ sequences, and the output comprises of 4 files:
+
+The input for the software are FASTQ sequences, and the output comprises of four files:
 1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
 
 The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/index.html), since it supports the use of [Docker](https://www.docker.com/) containers. 
@@ -21,7 +22,24 @@ The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/ind
 5. Bash 3.2 (or later)
 
 
-## Instructions to run using Nextflow with Docker ##
+## Instructions to run iMPP using Nextflow (with Docker enabled) ##
+
+### Installation ###
+#### Nextflow ####
+1. Install java JRE is you don't already have it (7 or higher)
+2. Install Nextflow
+```
+curl -fsSL https://get.nextflow.io | bash
+```
+Add Nextflow binary to your user's PATH:
+```
+mv nextflow ~/bin/
+OR system-wide installation:
+sudo mv nextflow /usr/local/bin
+```
+
+4. 
+* Docker engine. Instructions to install Docker can be found here: 
 
 Nextflow and Docker would need to be installed to run the software. 
 
@@ -34,11 +52,6 @@ $git clone https://github.com/Sirisha-t/iMPP.git
 cd to the project directory (i.e. /impp)
 
 Step 2: Install Nextflow
-The below command can be copied to the terminal to install nextflow:
-```
-curl -fsSL https://get.nextflow.io | bash
-```
-[Note: Make the binary executable on your system by running chmod +x nextflow]
 
 Step 3: Run Nextflow script (with docker)
 ```
