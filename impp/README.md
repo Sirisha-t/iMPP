@@ -16,6 +16,7 @@ The input for the software are FASTQ sequences, and the output comprises of 4 fi
 1. gcc compiler (version > 4.8.5)
 2. boost-1.54.0 or newer
 3. perl interpreter
+4. python (version >= 2.7)
 
 
 ## Instructions to run using Nextflow with Docker ##
@@ -26,12 +27,17 @@ Nextflow and Docker would need to be installed to run the software.
 Step 1: Clone the repository:
 ```
 $git clone https://github.com/Sirisha-t/iMPP.git
+
 ```
+cd to the project directory (i.e. /impp)
+
 Step 2: Install Nextflow
 The below command can be copied to the terminal to install nextflow:
 ```
 curl -fsSL https://get.nextflow.io | bash
 ```
+[Note: Make the binary executable on your system by running chmod +x nextflow]
+
 Step 3: Run Nextflow script (with docker)
 ```
 nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
@@ -44,6 +50,7 @@ The input parameters can be modified based on the parameter options provided bel
 USAGE: nextflow run main.nf --single [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
    -profile               <string>      : [required] docker and base/test
+   -resume				: [optional] can be set to resume workflow execution 
    --interleaved          <filename>    : fastq file with interlaced forward and reverse paired-end reads
    --forward              <filename>    : fastq file with forward paired-end reads
    --reverse              <filename>    : fastq file with reverse paired-end reads
@@ -63,6 +70,11 @@ You can run a test with the following command:
 ```
  nextflow run main.nf -profile test,docker
 ```
+To resume workflow execution from where it stopped, use the '-resume' command as shown below:
+```
+nextflow run main.nf -profile test,docker -resume
+```
+
 
 ## Instructions to install locally ##
 

@@ -1,24 +1,85 @@
-# iMPP : integrated Metagenomic Protein Predictor
+==========================================================================
 
-Description:
+# iMPP: integrated Metagenomic Protein Predictor #
+
+==========================================================================
+### Description ###
 
 iMPP is a tool designed to predict and assemble peptides from short fragmentary reads.
 iMPP is written in C++ and has been tested on a 64-bit Linux system.
-The input for the software are FASTQ sequences, and the output comprises of 4 files: 1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
+The input for the software are FASTQ sequences, and the output comprises of 4 files:
+1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
 
-==============================================
 
-Prerequisites:
+### Prerequisites ###
 
 1. gcc compiler (version > 4.8.5)
 2. boost-1.54.0 or newer
 3. perl interpreter
+4. python (version >= 2.7)
+5. Bash 3.2 (or later) and Java 11 (or later, up to 18) [for Nextflow]
 
-==============================================
 
-Installation:
+## Instructions to run using Nextflow with Docker ##
 
-To install iMPP, please follow the steps below:
+Nextflow and Docker would need to be installed to run the software. 
+
+
+Step 1: Clone the repository:
+```
+$git clone https://github.com/Sirisha-t/iMPP.git
+
+```
+cd to the project directory (i.e. /impp)
+
+Step 2: Install Nextflow
+The below command can be copied to the terminal to install nextflow:
+```
+curl -fsSL https://get.nextflow.io | bash
+```
+[Note: Make the binary executable on your system by running chmod +x nextflow]
+
+Step 3: Run Nextflow script (with docker)
+```
+nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
+
+Eg: nextflow run main.nf --single data/input.fastq.gz --outdir output -profile base, docker
+
+```
+The input parameters can be modified based on the parameter options provided below:
+```
+USAGE: nextflow run main.nf --single [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
+ Input data options:
+   -profile               <string>      : [required] docker and base/test
+   -resume				: [optional] can be set to resume workflow execution 
+   --interleaved          <filename>    : fastq file with interlaced forward and reverse paired-end reads
+   --forward              <filename>    : fastq file with forward paired-end reads
+   --reverse              <filename>    : fastq file with reverse paired-end reads
+   --single               <filename>    : fastq file with unpaired reads
+   --outdir               <dirname>     : [required] output directory name including the full path [default: output]
+   --genecaller           <string>      : [optional] fgs or prodigal [default: fgs]
+   --threads              <int>         : [optional] number of threads [default: 16]
+   --maxlen               <int>         : [optional] maximum extension length for anchors [default: 150]
+   -h/--help                            :  help message
+
+  NOTE: Input FASTQ read file must be specified in either --interleaved, --forward & --reverse or --single format.
+```
+
+Note: If you are unable to run the script, please check your Docker or Nextflow installation. 
+
+You can run a test with the following command:
+```
+ nextflow run main.nf -profile test,docker
+```
+To resume workflow execution from where it stopped, use the '-resume' command as shown below:
+```
+nextflow run main.nf -profile test,docker -resume
+```
+
+
+## Instructions to install locally ##
+
+To install iMPP in your local dir, please follow the steps below:
 
 1. Clone the repository:
    $git clone https://github.com/Sirisha-t/iMPP.git
@@ -30,12 +91,11 @@ To install iMPP, please follow the steps below:
     $ bash install.sh
 
 
-==============================================
+__Running the program:__
 
-Running the program:
+1.  The impp_run.pl perl wrapper is used to run the program. The command used is:
 
-The impp_run.pl perl wrapper is used to run the program. The command used is:
-
+```
 USAGE: ./impp_run.pl [options] <fastq_file/s> -o <output_directory>
 
 Input data options:
@@ -53,27 +113,28 @@ Note: The parameter file specifies the parameters used for running all third par
 The 'parameters.txt' file in ~/params/ directory contains the deaulft set of parameters used for running iMPP. 
 This file can be edited and provided as an optional parameter depending on user requirements. If no file is specified, 
 preset parameters will be used.  
+```
 
+__Example__
 
-==============================================
-
-Example:
 An example simulated single-end Illumina reads file is provided in the ~/example/ directory.
 
 iMPP can be run on this file with the following options:
-
+```
 $ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/parameters.txt &> example/impp.example.run.log
 
 (Note: The ~/example/samplereads.fq.gz is a zipped file. Please make sure you unzip it (cmd: gunzip samplereads.fq.gz) before running iMPP)  
+```
 
-In this example, iMPP will use the preset parameters from the params/parameters.txt file. 
+In this example, iMPP will use the preset parameters from the params/parameters.txt file.
 
-==============================================
+The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/impp/params/parameters.txt "parameters.txt")
 
-Output:
+
+## Output ##
 
 The final iMPP output should contain four files.
-
+```
 1. orfs.ffn : This file lists nucleotide sequences.
 E.g.
 >17,51,49,46,41_2_136_+
@@ -97,11 +158,11 @@ RNGSDYSAAVLAACLRADCCEIWTDVDGVYTCDPRQVPDARLLKSMSYQEAMELSYFGAKVLHPRTITPIAQFQIPCLIK
 
 3. orfs.gff : This file lists the gene prediction results in gff format.
 E.g.
->##gff-version 3
->2,17,14			FGS	CDS	90	191	.	+	2	ID=2,17,14_90_191_+;product=predicted protein
->3,17,15			FGS	CDS	90	194	.	+	2	ID=3,17,15_90_194_+;product=predicted protein
->14,51,49,46,40,59,58	FGS	CDS	2	136	.	+	1	ID=14,51,49,46,40,59,58_2_136_+;product=predicted protein
->15,73,40,59,58		FGS	CDS	1	132	.	+	0	ID=15,73,40,59,58_1_132_+;product=predicted protein
+##gff-version 3
+2,17,14			FGS	CDS	90	191	.	+	2	ID=2,17,14_90_191_+;product=predicted protein
+3,17,15			FGS	CDS	90	194	.	+	2	ID=3,17,15_90_194_+;product=predicted protein
+14,51,49,46,40,59,58	FGS	CDS	2	136	.	+	1	ID=14,51,49,46,40,59,58_2_136_+;product=predicted protein
+15,73,40,59,58		FGS	CDS	1	132	.	+	0	ID=15,73,40,59,58_1_132_+;product=predicted protein
 
 4. assembled_proteins.faa : This file containts the assembled protein sequences.
 E.g.
@@ -113,5 +174,4 @@ ATNFPSIVDSELIELITDLLPTRCLIDTQVFDEEGFYRM
 HLFVTIKEVSDNPVLHPIKTLFIEDLCVDQAARGQKIGDQLYQFAVNYAREIGCYNLTLNVWN
 >6	99-98	3
 AWELMLKAYIINNNGEESIYFKDSKDRTISLENAVE
-
-==============================================
+```
