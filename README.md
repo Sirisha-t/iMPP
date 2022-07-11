@@ -41,9 +41,9 @@ sudo mv nextflow /usr/local/bin
 ```
 
 3. Install Docker
-```
+
 Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
-```
+
 ```
 To get Docker using CLI:
 curl -fsSL https://get.docker.com | sh;
@@ -56,22 +56,35 @@ Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.s
 Step 1: Clone the repository:
 ```
 $git clone https://github.com/Sirisha-t/iMPP.git
-
 ```
-cd to the project directory (i.e. /impp)
-
-Step 2: Install Nextflow
-
-Step 3: Run Nextflow script (with docker)
+Step 2: Go to the project directory (/iMPP)
 ```
+$cd iMPP
+```
+Step 3: Run Nextflow script
+```
+For single end:
 nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
 
-Eg: nextflow run main.nf --single data/input.fastq.gz --outdir output -profile base, docker
+For paired end:
+nextflow run main.nf --forward <forward_fastq_file> --reverse <reverse_fastq_file> --outdir <output_dir> -profile base,docker
+OR
+nextflow run main.nf --interleaves <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
+
+
+Eg:
+for single end: 
+nextflow run main.nf --single data/reads.fq.gz --outdir output -profile base, docker
+
+for paired end:
+nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base, docker
+OR
+nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base, docker
 
 ```
 The input parameters can be modified based on the parameter options provided below:
 ```
-USAGE: nextflow run main.nf --single [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
+USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
    -profile               <string>      : [required] docker and base/test
    -resume				: [optional] can be set to resume workflow execution 
@@ -93,6 +106,9 @@ Note: If you are unable to run the script, please check your Docker or Nextflow 
 You can run a test with the following command:
 ```
  nextflow run main.nf -profile test,docker
+ 
+ [This will automatically read the sample input file from the /data folder]
+ 
 ```
 To resume workflow execution from where it stopped, use the '-resume' command as shown below:
 ```
