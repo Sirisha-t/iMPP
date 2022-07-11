@@ -108,14 +108,14 @@ USAGE: ./nextflow run main.nf --single/--forward and --reverse/--interleaved [ot
 
 * You can run a test with the following command:
 ```
- nextflow run main.nf -profile test,docker
+ ./nextflow run main.nf -profile test,docker
  
  [This will automatically read the sample input file from the /data folder]
  
 ```
 * To resume workflow execution from where it stopped, use the '-resume' command as shown below:
 ```
-nextflow run main.nf -profile test,docker -resume
+./nextflow run main.nf -profile test,docker -resume
 ```
 
 
