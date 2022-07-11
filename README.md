@@ -25,24 +25,25 @@ The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/ind
 ## Instructions to run iMPP using Nextflow (with Docker enabled) ##
 
 ### Installation ###
-#### Nextflow ####
-1. Install java JRE is you don't already have it (7 or higher)
+1. Make sure that [Java](https://www.java.com/en/download/) is installed. (8 or higher)
+```
+java --version
+```
+
 2. Install Nextflow
 ```
 curl -fsSL https://get.nextflow.io | bash
-```
+
 Add Nextflow binary to your user's PATH:
-```
 mv nextflow ~/bin/
 OR system-wide installation:
 sudo mv nextflow /usr/local/bin
 ```
 
-4. 
-* Docker engine. Instructions to install Docker can be found here: 
+3. Install Docker
+Follow Docker Documentation (docker CE is sufficient). Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
 
-Nextflow and Docker would need to be installed to run the software. 
-
+### Steps to run iMPP ###
 
 Step 1: Clone the repository:
 ```
