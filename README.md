@@ -3,13 +3,14 @@
 # iMPP: integrated Metagenomic Protein Predictor #
 
 ==========================================================================
-### Description ###
+### Overview ###
 
-iMPP is a tool designed to predict and assemble peptides from short fragmentary reads.
+iMPP is a tool designed to predict genes and assemble peptides from short fragmentary reads.
 iMPP is written in C++ and has been tested on a 64-bit Linux system.
 The input for the software are FASTQ sequences, and the output comprises of 4 files:
 1. predicted genes (nucl), 2. predicted peptides (prot), 3. gene predictions in gff format, 4. assembled peptide sequences (prot).
 
+The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/index.html), since it supports the use of [Docker](https://www.docker.com/) containers. 
 
 ### Prerequisites ###
 
@@ -17,7 +18,7 @@ The input for the software are FASTQ sequences, and the output comprises of 4 fi
 2. boost-1.54.0 or newer
 3. perl interpreter
 4. python (version >= 2.7)
-5. Bash 3.2 (or later) and Java 11 (or later, up to 18) [for Nextflow]
+5. Bash 3.2 (or later)
 
 
 ## Instructions to run using Nextflow with Docker ##
