@@ -28,14 +28,14 @@ The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/ind
 ## Instructions to run iMPP using Nextflow (with Docker enabled) ##
 
 ### Installation ###
-* __Install Java__
+__Install Java__
 
 Make sure that [Java](https://www.java.com/en/download/) is installed. (8 or higher)
 ```
 java --version
 ```
 
-* __Install Nextflow__
+__Install Nextflow__
 ```
 curl -fsSL https://get.nextflow.io | bash
 
@@ -45,7 +45,7 @@ OR system-wide installation:
 sudo mv nextflow /usr/local/bin
 ```
 
-* __Install Docker__
+__Install Docker__
 
 Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
 
@@ -105,7 +105,7 @@ USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [othe
 
   NOTE: Input FASTQ read file must be specified in either --interleaved, --forward & --reverse or --single format.
 ```
-* The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/params/parameters.txt "parameters.txt")
+* The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/params/parameters.txt "parameters.txt")
 
 
 * You can run a test with the following command:
@@ -172,7 +172,7 @@ $ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/pa
 
 In this example, iMPP will use the preset parameters from the params/parameters.txt file.
 
-The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/params/parameters.txt "parameters.txt")
+The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/params/parameters.txt "parameters.txt")
 
 
 ## Output ##
