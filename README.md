@@ -28,14 +28,14 @@ The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/ind
 ## Instructions to run iMPP using Nextflow (with Docker enabled) ##
 
 ### Installation ###
-__Install Java__
+* __Install Java__
 
 Make sure that [Java](https://www.java.com/en/download/) is installed. (8 or higher)
 ```
 java --version
 ```
 
-__Install Nextflow__
+* __Install Nextflow__
 ```
 curl -fsSL https://get.nextflow.io | bash
 
@@ -45,12 +45,12 @@ OR system-wide installation:
 sudo mv nextflow /usr/local/bin
 ```
 
-__Install Docker__
+* __Install Docker__
 
 Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
 
 ```
-To get Docker using CLI:
+To install Docker using CLI:
 curl -fsSL https://get.docker.com | sh;
 
 Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.sock
