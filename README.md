@@ -77,12 +77,12 @@ OR
 
 Example:
 for single end: 
-./nextflow run main.nf --single data/reads.fq.gz --outdir output -profile base, docker
+./nextflow run main.nf --single data/reads.fq.gz --outdir output -profile base,docker
 
 for paired end:
-./nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base, docker
+./nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base,docker
 OR
-./nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base, docker
+./nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base,docker
 
 ```
 * The input parameters can be modified based on the parameter options provided below:
