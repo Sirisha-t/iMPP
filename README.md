@@ -30,7 +30,7 @@ The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/ind
 ### Installation ###
 __Install Java__
 
-Make sure that [Java](https://www.java.com/en/download/) is installed. (8 or higher)
+Make sure that [Java](https://www.oracle.com/java/technologies/downloads/) is installed. (11 or higher)
 ```
 java --version
 ```
