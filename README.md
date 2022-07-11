@@ -9,7 +9,10 @@ iMPP is a tool designed to predict genes and assemble peptides from short fragme
 iMPP is written in C++ and has been tested on a 64-bit Linux system.
 
 The input for the software are FASTQ sequences, and the output comprises of four files:
-* predicted genes (nucl) * predicted peptides (prot) * gene predictions in gff format * assembled peptide sequences (prot).
+* predicted genes (nucl) 
+* predicted peptides (prot) 
+* gene predictions in gff format
+* assembled peptide sequences (prot).
 
 The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/index.html), since it supports the use of [Docker](https://www.docker.com/) containers. 
 
