@@ -1,0 +1,132 @@
+##----------------------------
+## General options
+##----------------------------
+## Number of threads to use(default=16)
+thread 16
+## Max extend length
+mlen 300
+
+
+##----------------------------
+## ORF Finding
+##----------------------------
+## FragGeneScan options
+
+## FGS  complete genomic sequence option (0:short sequences, 1:complete genomic sequences)
+fgs_complete  0
+## FGS train option (complete, sanger_5, sanger_10, 454_10, 454_30, illumina_5, or illumina_10)
+## FGS illumina_5 option for input reads. Rest of the runs are in complete mode by default.
+fgs_train_reads	illumina_10
+## testing frag mode for all other runs
+fgs_train_other	illumina_10
+#fgs_train_other complete
+## Filter out FGS ORF prediction with indels (1:true or 0:false).
+fgs_dropindel	0
+
+
+##----------------------------
+## DNA Assembly options
+##----------------------------
+## Currently, IMPP supports the following de novo assemblers:
+## 0:SGA, 1:SPAdes
+## Perform assembly (default=0)
+assemble  0
+
+##----------------------------
+## 1. SGA Assembler options
+##----------------------------
+##
+## preprocess (1:true or 0:false)
+sga_preprocess  1
+
+## index (1:true or 0:false)
+sga_index 1
+## BWT construction algorithm (0: sais - induced sort algorithm, slower but works for very long sequences.
+## 1: ropebwt - very fast and memory efficient. use this for short (<200bp) reads )
+sga_index_algorithm 1
+
+## overlap (1:true or 0:false)
+sga_overlap 1
+# minimum overlap required between two reads
+sga_overlap_min_len 20
+
+## rmdup (1:true or 0:false)
+sga_rmdup 1
+
+## assemble (1:true or 0:false)
+sga_assemble  1
+# Only use overlaps of at least LEN. This can be used to filter the overlap set
+# so that the overlap step only needs to be run once.
+sga_assemble_min_len  20
+
+## merge (1:true or 0:false)
+sga_merge 0
+
+## bwt2fa (1:true or 0:false)
+sga_bwt2fa  0
+
+## correct (1:true or 0:false)
+sga_correct 1
+#specify the correction algorithm to use. ( 0: kmer, 1: hybrid, 2: overlap)
+sga_correct_algo  0
+#Kmer correction params- The length of the kmer to use
+sga_correct_kmer  15
+#Overlap correction params- minimum overlap required between two reads
+sga_correct_min_olap 10
+
+## fm-merge (1:true or 0:false)
+sga_fmmerge 0
+sga_fmmerge_min_olap  45
+
+## filter (1:true or 0:false)
+sga_filter  0
+# Length of kmer to use (default: 27)
+sga_filter_kmer 27
+# Require at least N kmer coverage for each kmer in a read
+sga_filter_kmer_thresh  3
+
+##----------------------------
+## 2. SPAdes Assembler options
+##----------------------------
+#spades option discared if sga assembler is used
+spades  s
+# Running only assembler, without error correction (1:true or 0:false)
+spades_only_assembler 1
+# Running only error correction, without assembly (1:true or 0:false)
+spades_error_correct  0
+# continue run from the last available check-point (1:true or 0:false)
+spades_continue 0
+# forces error correction not to compress the corrected reads (1:true or 0:false)
+spades_disable_gzip 0
+# disables repeat resolution stage of assembling (1:true or 0:false)
+spades_rr 0
+# RAM limit for SPAdes in Gb (terminates if exceeded)
+spades_memory_limit 500
+#comma-separated list of k-mer sizes <int, int,..>(must be odd and less than 128) [default: 'auto']
+spades_kmer auto
+
+
+##----------------------------
+## Mapping Options
+##----------------------------
+## BWA-mem mapping Options (1:true or 0:false)
+bwa 1
+# minimum seed length
+bwa_min_seed  19
+# minimum score to output -- 65 for gut
+bwa_min_score 70
+
+##----------------------------
+## Protein Assembly options
+##----------------------------
+## PLASS peptide assembler Options (1: true, 0: false)
+plass 1
+# 1: Assemble protein sequences by iterative greedy overlap assembly.
+# 0: Assemble nucleotide sequences by iterative greedy overlap assembly
+plass_assemble  1
+# minimum codon number in open reading frames
+plass_min_length  20
+# number of iterations
+plass_num_iter  12
+
+##----------------------------
