@@ -435,6 +435,8 @@ process callBWA{
 process sixFrameTranslate{
   cache 'deep'
   publishDir "${params.tmpdir}"
+  container 'staphb/spades:latest'
+  
   input:
   path(reads_fa) 
   path(reads_gff)
@@ -448,7 +450,7 @@ process sixFrameTranslate{
   path "reads.translated.${params.bwa_min_score}.fasta", emit : translated_reads
   script:
   """
-  python3 $projectDir/bin/sixFrameTranslate.py $reads_gff $edges_gff $paths_gff $edges_bwa $paths_bwa $reads_fa $params.outdir
+  sixFrameTranslate.py $reads_gff $edges_gff $paths_gff $edges_bwa $paths_bwa $reads_fa $params.outdir
   mv reads.filter.fasta reads.filter.${params.bwa_min_score}.fasta
   mv reads.translated.fasta reads.translated.${params.bwa_min_score}.fasta
   """
@@ -480,6 +482,7 @@ process modifyAssemblyOut{
   executor 'local'
   cpus params.threads
   cache 'deep'
+  container 'staphb/spades:latest'
   
   publishDir "${params.tmpdir}"
   input:
@@ -487,7 +490,7 @@ process modifyAssemblyOut{
   output:
   path "assembled_proteins.${params.bwa_min_score}.re.60.faa", emit: plass_renamed
   """
-  python $projectDir/bin/renamePlassContig.py $assembled_proteins
+  renamePlassContig.py $assembled_proteins
   """
 
 }
@@ -512,9 +515,9 @@ process alignSixFrametoAssembly{
 
 process refinePlassInput{
   executor 'local'
-  cpus params.threads
-  
+  cpus params.threads  
   cache 'deep'
+  container 'staphb/spades:latest'
   publishDir "${params.tmpdir}"
 
   input:
@@ -526,8 +529,8 @@ process refinePlassInput{
   path 'reads.impp.fasta', emit: impp_filtered_reads
   script:
   """
-  python $projectDir/bin/plassMapping.py $assembled_proteins $plass_dmd $translated_reads  
-  python $projectDir/bin/getPredReads.py $filtered_reads $translated_reads  
+  plassMapping.py $assembled_proteins $plass_dmd $translated_reads  
+  getPredReads.py $filtered_reads $translated_reads  
   cat reads.filter.${params.bwa_min_score}.pred.fasta reads.translated.${params.bwa_min_score}.mapped.fasta > reads.impp.fasta
   """
 }
