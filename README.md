@@ -28,14 +28,16 @@ java --version
 
 __Install Docker__
 
-Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
+Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Instructions to install Docker for Windows can be found [here] (https://docs.docker.com/desktop/install/windows-install/) and for Mac [here] (https://docs.docker.com/desktop/install/mac-install/).
+
+Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
 
 ```
-To install Docker using CLI:
+To install Docker using CLI (Linux):
 curl -fsSL https://get.docker.com | sh;
-
-Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.sock
+[Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.sock]
 ```
+
 
 __Clone the repository__
 ```
@@ -58,22 +60,22 @@ Optionally, move the nextflow file to a directory accessible by your $PATH varia
 __Run iMPP using Nextflow__
 ```
 For single end:
-./nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
+/path/to/nextflow/nextflow run main.nf --single <input_fastq_file> --outdir <output_dir> -profile base,docker
 
 For paired end:
-./nextflow run main.nf --forward <forward_fastq_file> --reverse <reverse_fastq_file> --outdir <output_dir> -profile base,docker
+/path/to/nextflow/nextflow run main.nf --forward <forward_fastq_file> --reverse <reverse_fastq_file> --outdir <output_dir> -profile base,docker
 OR
-./nextflow run main.nf --interleaved <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
+/path/to/nextflow/nextflow run main.nf --interleaved <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
 
 
 Example:
 for single end: 
-./nextflow run main.nf --single data/reads.fq.gz --outdir output -profile base,docker
+/path/to/nextflow/nextflow run main.nf --single data/reads.fq.gz --outdir output -profile base,docker
 
 for paired end:
-./nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base,docker
+/path/to/nextflow/nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base,docker
 OR
-./nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base,docker
+/path/to/nextflow/nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base,docker
 
 ```
 * The input parameters can be modified based on the parameter options provided below:
