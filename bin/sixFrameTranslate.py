@@ -35,7 +35,7 @@ def translate(offset, seq, out):
 	return out_sixfr
 
 def reverse_complement():
-	nn = {'A':'T', 'C':'G', 'G':'C','T':'A')
+	nn = {'A':'T', 'C':'G', 'G':'C','T':'A'}
 	return "".join(nn[n] for n in reversed(st))
 	
 
