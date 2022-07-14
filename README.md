@@ -28,7 +28,7 @@ java --version
 
 __Install Docker__
 
-Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Instructions to install Docker for Windows can be found [here] (https://docs.docker.com/desktop/install/windows-install/) and for Mac [here] (https://docs.docker.com/desktop/install/mac-install/).
+Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Instructions to install Docker for Windows can be found [here](https://docs.docker.com/desktop/install/windows-install/) and for Mac [here](https://docs.docker.com/desktop/install/mac-install/).
 
 Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the nextflow documentation [here](https://www.nextflow.io/docs/latest/config.html#scope-docker). 
 
