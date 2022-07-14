@@ -16,15 +16,6 @@ The input for the software are FASTQ sequences, and the output comprises of four
 
 The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/index.html), since it supports the use of [Docker](https://www.docker.com/) containers. 
 
-### Prerequisites ###
-
-1. gcc compiler (version > 4.8.5)
-2. boost-1.54.0 or newer
-3. perl interpreter
-4. python (version >= 2.7)
-5. Bash 3.2 (or later)
-
-
 ## Instructions to run iMPP using Nextflow (with Docker enabled) ##
 
 ### Installation ###
@@ -120,6 +111,14 @@ USAGE: ./nextflow run main.nf --single/--forward and --reverse/--interleaved [ot
 
 
 ## Instructions to install locally ##
+
+### Prerequisites ###
+
+1. gcc compiler (version > 4.8.5)
+2. boost-1.54.0 or newer
+3. perl interpreter
+4. python (version >= 2.7)
+5. Bash 3.2 (or later)
 
 To install iMPP in your local dir, please follow the steps below:
 
