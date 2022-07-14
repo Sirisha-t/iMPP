@@ -34,7 +34,7 @@ def translate(offset, seq, out):
 			out_sixfr += aa_dict[codon]
 	return out_sixfr
 
-def reverse_complement():
+def reverse_complement(st):
 	nn = {'A':'T', 'C':'G', 'G':'C','T':'A'}
 	return "".join(nn[n] for n in reversed(st))
 	
