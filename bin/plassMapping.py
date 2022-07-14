@@ -42,8 +42,7 @@ def InputFileReader( contig_in, dmd_in,  read_in):
 		if cname in contig60:
 			if float(pident) > 90.00 and int(align_len) > 20:
 				mappedRead.add(rname)
-				#print rname
-	print len(mappedRead)
+				
 	##reading translated reads fasta file
 	rin = open(read_in,'r')
 	line = rin.readline()
