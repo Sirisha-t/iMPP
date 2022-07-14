@@ -206,7 +206,7 @@ process callFGS{
   cache 'deep'
   executor 'local'
   cpus params.threads
-  memory '40 GB'
+  
   input:
     path(queryFile)
   output:
@@ -225,7 +225,7 @@ process callFGS{
 process callMPD{
   executor 'local'
   cpus params.threads
-  memory '40 GB'  
+  
   input:
     path(queryFile)
   output:
@@ -242,7 +242,7 @@ process callSGAAssembly{
   cache 'deep'
   executor 'local'
   cpus params.threads
-  memory '40 GB'  
+  
   input:
   path(queryFile)
   output:
@@ -289,7 +289,7 @@ process callSPAdesAssembly{
   cache 'deep'
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+  
   publishDir "${params.tmpdir}"
   input:
   path(queryFile)
@@ -338,7 +338,7 @@ process splitPaths{
 process callFGSEdges{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+   
   container 'tsirisha/fraggenescan:latest'
 
   publishDir "${params.tmpdir}"
@@ -365,7 +365,7 @@ process callFGSEdges{
 process callFGSPaths{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+   
   container 'tsirisha/fraggenescan:latest'
 
   publishDir "${params.tmpdir}"
@@ -409,7 +409,7 @@ process callIMPP{
 process callBWA{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+  
   cache 'deep'
   publishDir "${params.tmpdir}"
   input:
@@ -459,7 +459,7 @@ process sixFrameTranslate{
 process peptideAssembly_first{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+   
   cache 'deep'
   publishDir "${params.tmpdir}"
 
@@ -479,8 +479,8 @@ process peptideAssembly_first{
 process modifyAssemblyOut{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
   cache 'deep'
+  
   publishDir "${params.tmpdir}"
   input:
   path(assembled_proteins)
@@ -494,7 +494,7 @@ process modifyAssemblyOut{
 process alignSixFrametoAssembly{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+  
   cache 'deep'
   publishDir "${params.tmpdir}"
 
@@ -513,7 +513,7 @@ process alignSixFrametoAssembly{
 process refinePlassInput{
   executor 'local'
   cpus params.threads
-  memory '40 GB' 
+  
   cache 'deep'
   publishDir "${params.tmpdir}"
 
@@ -535,9 +535,9 @@ process refinePlassInput{
 /** second round of plass assembly **/
 process peptideAssembly_second{
   executor 'local'
-  cpus params.threads
-  memory '40 GB' 
+  cpus params.threads 
   cache 'deep'
+  
   publishDir "${params.tmpdir}"
 
   input:
