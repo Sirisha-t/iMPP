@@ -80,7 +80,7 @@ OR
 ```
 * The input parameters can be modified based on the parameter options provided below:
 ```
-USAGE: ./nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
+USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
    -profile               <string>      : [required] docker and base/test
    -resume				: [optional] can be set to resume workflow execution 
@@ -101,14 +101,14 @@ USAGE: ./nextflow run main.nf --single/--forward and --reverse/--interleaved [ot
 
 * You can run a test with the following command:
 ```
- ./nextflow run main.nf -profile test,docker
+ /path/to/nextflow/nextflow run main.nf -profile test,docker
  
  [This will automatically read the sample input file from the /data folder]
  
 ```
 * To resume workflow execution from where it stopped, use the '-resume' command as shown below:
 ```
-./nextflow run main.nf -profile test,docker -resume
+/path/to/nextflow/nextflow run main.nf -profile test,docker -resume
 ```
 
 
