@@ -1,9 +1,9 @@
+#!/usr/bin/python
 import math
 import re
 import sys
 import string
 import time
-from Bio.Seq import Seq
 
 
 ## DNA codon table for bacteria and archae ( genetic code : 11)
@@ -20,9 +20,6 @@ aa_dict = {"TTT":"F","TTC":"F","TTA":"L","TTG":"L","TCT":"S","TCC":"S",
 			  "GAG":"E","GGT":"G","GGC":"G","GGA":"G","GGG":"G"}
 
 
-#global out_sixfr
-#out_sixfr = ""
-
 def translate(offset, seq, out):
 	out_sixfr = ""
 	for x in range(int(offset), len(seq), 3):
@@ -37,6 +34,10 @@ def translate(offset, seq, out):
 			out_sixfr += aa_dict[codon]
 	return out_sixfr
 
+def reverse_complement():
+	nn = {'A':'T', 'C':'G', 'G':'C','T':'A')
+	return "".join(nn[n] for n in reversed(st))
+	
 
 def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout):
 	seq_dict = {}
@@ -56,8 +57,8 @@ def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout)
 	# Goes through each sequence and calls 'translate' for all reading frames
 	#for item in seq_dict:
 	seq = seq.upper()
-	seq_rc = Seq(seq)
-	seq_rc = seq_rc.reverse_complement()
+	seq_rc = seq
+	seq_rc = reverse_complement(seq_rc)
 	seq_rc = str(seq_rc)
 	out_sixfr += header+'_frame1\n';
 	out_sixfr += translate(0, seq, out)
@@ -146,13 +147,8 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 		line = fin.readline()
 
 	UnPredReadSet = allInputReadSet.difference(allPredictedReadSet)
-        #print("unpred set")
-	#print(len(UnPredReadSet))
-	#print("all pred set")
-	#print(len(allPredictedReadSet))
+	
 	end=time.time()
-	print(len(UnPredReadSet))
-	print(len(allPredictedReadSet))
 
 	start=time.time()
 	for read in UnPredReadSet:
@@ -163,25 +159,6 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 		sixFrameTranslate(sequence, allPredictedReadSet, ReadInfo, translatedReadsOutFile, predictedReadsOutfile)
 		#seqs_to_be_translated += sequence
 	end=time.time()
-	#print("looping through unpred set + calling sixf: ")
-	#print((end-start))
-	#print (count)
-
-	#print("all input set count :")
-	#print(len(allInputReadSet))
-	#print("all pred set count :")
-	#print(len(allPredictedReadSet))
-	#print("unpred set count :")
-	#print(len(UnPredReadSet))
-
-	#if seqs_to_be_translated != "" :
-	#	start=time.time()
-	#	sixFrameTranslate(seqs_to_be_translated, allPredictedReadSet, ReadInfo, translatedReadsOutFile, predictedReadsOutfile)
-	#	end=time.time()
-	#	print("six frame translate func completed in :")
-	#	print((end-start))
-
-
 
 
 def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, input_read, out_name):
