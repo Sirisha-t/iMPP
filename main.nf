@@ -569,6 +569,7 @@ process cleanOutput{
 
   output:
   path 'orfs.*', emit: final_output
+  path 'assembled_proteins.faa', emit: final_output
   script:
   """
   cat $reads_gff $paths_gff > orfs.gff
