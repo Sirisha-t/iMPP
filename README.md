@@ -64,8 +64,6 @@ For single end:
 
 For paired end:
 /path/to/nextflow/nextflow run main.nf --forward <forward_fastq_file> --reverse <reverse_fastq_file> --outdir <output_dir> -profile base,docker
-OR
-/path/to/nextflow/nextflow run main.nf --interleaved <interleaved_fastq_file> --outdir <output_dir> -profile base,docker
 
 
 Example:
@@ -74,8 +72,6 @@ for single end:
 
 for paired end:
 /path/to/nextflow/nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base,docker
-OR
-/path/to/nextflow/nextflow run main.nf --interleaved data/reads.12.fq.gz --outdir output -profile base,docker
 
 ```
 * The input parameters can be modified based on the parameter options provided below:
