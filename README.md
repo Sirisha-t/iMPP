@@ -79,11 +79,11 @@ for paired end:
 USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
    -profile               <string>      : [required] docker and base/test
-   -resume				: [optional] can be set to resume workflow execution 
-   --interleaved          <filename>    : fastq file with interlaced forward and reverse paired-end reads
+   -resume				: [optional] can be set to resume workflow execution
+   --single               <filename>    : fastq file with unpaired reads
    --forward              <filename>    : fastq file with forward paired-end reads
    --reverse              <filename>    : fastq file with reverse paired-end reads
-   --single               <filename>    : fastq file with unpaired reads
+   --interleaved          <filename>    : fastq file with interlaced forward and reverse paired-end reads
    --outdir               <dirname>     : [required] output directory name including the full path [default: output]
    --genecaller           <string>      : [optional] fgs or prodigal [default: fgs]
    --threads              <int>         : [optional] number of threads [default: 16]
