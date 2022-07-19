@@ -107,76 +107,13 @@ USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [othe
 /path/to/nextflow/nextflow run main.nf -profile test,docker -resume
 ```
 
-
-## Instructions to install locally ##
-
-### Prerequisites ###
-
-1. gcc compiler (version > 4.8.5)
-2. boost-1.54.0 or newer
-3. perl interpreter
-4. python (version >= 2.7)
-5. Bash 3.2 (or later)
-
-To install iMPP in your local dir, please follow the steps below:
-
-1. Clone the repository:
-   $git clone https://github.com/Sirisha-t/iMPP.git
-   
-   This will generate the directory "iMPP".
-   
-
-2. Install 3rd party softwares and compile by running the "install.sh" script.
-    $ bash install.sh
-
-
-__Running the program:__
-
-1.  The impp_run.pl perl wrapper is used to run the program. The command used is:
-
-```
-USAGE: ./impp_run.pl [options] <fastq_file/s> -o <output_directory>
-
-Input data options:
-	 --12  		 <filename> :	 fastq file with interlaced forward and reverse paired-end reads
- 	 -1    		 <filename> :	 fastq file with forward paired-end reads
- 	 -2	 	 <filename> :	 fastq file with reverse paired-end reads
- 	 -s	  	 <filename> :	 fastq file with unpaired reads
- 	 -a/--assembler  <0 or 1>   :    type of assembler to run (0: sga, 1: spades)
- 	 -o/--outdir     <dirname>  :    output directory name including the full path
- 	 -m/--max-len    <int>      :    maximum extension length for anchors (default: 300) 
- 	 -p/--param-file <filename> :    parameter file
- 	 -h/--help                  :    print help message
-
-Note: The parameter file specifies the parameters used for running all third party programs. 
-The 'parameters.txt' file in ~/params/ directory contains the deaulft set of parameters used for running iMPP. 
-This file can be edited and provided as an optional parameter depending on user requirements. If no file is specified, 
-preset parameters will be used.  
-```
-
-__Example__
-
-An example simulated single-end Illumina reads file is provided in the ~/example/ directory.
-
-iMPP can be run on this file with the following options:
-```
-$ perl impp_run.pl -s example/samplereads.fq -a 0 -o example -m 300 -p params/parameters.txt &> example/impp.example.run.log
-
-(Note: The ~/example/samplereads.fq.gz is a zipped file. Please make sure you unzip it (cmd: gunzip samplereads.fq.gz) before running iMPP)  
-```
-
-In this example, iMPP will use the preset parameters from the params/parameters.txt file.
-
-The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/params/parameters.txt "parameters.txt")
-
-
 ## Output ##
 
 The final iMPP output should contain four files.
 ```
 1. orfs.ffn : This file lists nucleotide sequences.
 E.g.
->17,51,49,46,41_2_136_+
+>1_+
 GTTGTTACCTCGTTACCTTTGGTCGAAAAAAAAAGCCCGCACTGTCAGGTGCGGGCTTTTTTCTGTGTTTCCTGTACGCGTCAGCCCGCACCGTTACCTG
 TGGTAATGGTGATGGTGGTGGTAATGGTGGTGCTAATGCGTTTCATGGATGTTGTGTACTCTGTAATTTTTATCTGTCTGTGCGCTATGCCTATATTGGT
 TAAAGTATTTAGTGACCTAAGTCAA
