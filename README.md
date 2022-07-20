@@ -96,7 +96,7 @@ USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [othe
 ```
 * The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/params/parameters.txt "parameters.txt")
 
-* The four output files will be stored in the folder: ~/iMPP/output [default] or [user provided <outdir> name]
+* The four output files will be stored in the folder: ~/iMPP/output [default] or [user provided outdir name]
 
 * All the intermediate files will be stored in the folder : ~/iMPP/intermediate 
 
@@ -119,7 +119,7 @@ To resume workflow execution from where it stopped, use the '-resume' command as
 
 ## Output ##
 
-The final iMPP output will be in the <outdir> folder [default ~/output] and should contain four files.
+The final iMPP output will be in the user provided --outdir folder [default ~/output] and should contain four files.
 ```
 1. orfs.ffn : This file lists nucleotide sequences.
 E.g.
