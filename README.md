@@ -21,7 +21,7 @@ The workflow for iMPP has been written in [Nextflow](https://www.nextflow.io/ind
 ### Installation ###
 __Install Java__
 
-Make sure that Java is installed. (11 or higher) (Installation instructions can be found [here](https://www.oracle.com/java/technologies/downloads/)
+Make sure that Java is installed. (11 or higher) (Installation instructions can be found [here](https://www.oracle.com/java/technologies/downloads/))
 ```
 java --version
 ```
@@ -31,6 +31,8 @@ __Install Docker__
 Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Instructions to install Docker for Windows can be found [here](https://docs.docker.com/desktop/install/windows-install/) and for Mac [here](https://docs.docker.com/desktop/install/mac-install/).
 
 Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the [nextflow documentation](https://www.nextflow.io/docs/latest/config.html#scope-docker). Non-privileged users can run Docker following the instrcutions provided [here](https://docs.docker.com/engine/security/rootless/).
+
+Note: Windows users running Docker on WSL2 have to start the Docker Desktop application prior to running the iMPP workflow. 
 
 ```
 To install Docker using CLI (Linux):
@@ -74,7 +76,7 @@ for paired end:
 /path/to/nextflow/nextflow run main.nf --forward data/read1.fq.gz --reverse data/read2.fq.gz --outdir output -profile base,docker
 
 ```
-* The input parameters can be modified based on the parameter options provided below:
+The input parameters can be modified based on the parameter options provided below:
 ```
 USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
@@ -93,6 +95,8 @@ USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [othe
   NOTE: Input FASTQ read file must be specified in either --interleaved, --forward & --reverse or --single format.
 ```
 * The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/params/parameters.txt "parameters.txt")
+
+* The four output files will be stored in the folder: ~/iMPP/output [default] or [user provided <outdir> name]
 
 * All the intermediate files will be stored in the folder : ~/iMPP/intermediate 
 
