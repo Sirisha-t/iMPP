@@ -38,6 +38,14 @@ curl -fsSL https://get.docker.com | sh;
 [Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.sock]
 ```
 
+__Install Nextflow__
+```
+curl -fsSL https://get.nextflow.io | bash
+
+Make the binary executable on your system by running chmod +x nextflow.
+
+Optionally, move the nextflow file to a directory accessible by your $PATH variable. 
+```
 
 __Clone the repository__
 ```
@@ -48,14 +56,6 @@ Go to the project directory (/iMPP):
 $cd iMPP/
 ```
 
-__Install Nextflow__
-```
-curl -fsSL https://get.nextflow.io | bash
-
-Make the binary executable on your system by running chmod +x nextflow.
-
-Optionally, move the nextflow file to a directory accessible by your $PATH variable. 
-```
 
 __Run iMPP using Nextflow__
 ```
@@ -79,12 +79,12 @@ for paired end:
 USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [other options] <fastq file/s> --outdir <output_directory> -profile base,docker
  Input data options:
    -profile               <string>      : [required] docker and base/test
-   -resume				: [optional] can be set to resume workflow execution
+   -resume				                          : [optional] can be set to resume workflow execution
    --single               <filename>    : fastq file with unpaired reads
    --forward              <filename>    : fastq file with forward paired-end reads
    --reverse              <filename>    : fastq file with reverse paired-end reads
    --interleaved          <filename>    : fastq file with interlaced forward and reverse paired-end reads
-   --outdir               <dirname>     : [required] output directory name including the full path [default: output]
+   --outdir               <dirname>     : [optional] output directory name including the full path [default: output]
    --genecaller           <string>      : [optional] fgs or prodigal [default: fgs]
    --threads              <int>         : [optional] number of threads [default: 16]
    --maxlen               <int>         : [optional] maximum extension length for anchors [default: 150]
@@ -94,51 +94,53 @@ USAGE: nextflow run main.nf --single/--forward and --reverse/--interleaved [othe
 ```
 * The defult parameters used to run iMPP can be found here: [parameters.config](https://github.com/Sirisha-t/iMPP/blob/master/params/parameters.txt "parameters.txt")
 
+* All the intermediate files will be stored in the folder : ~/iMPP/intermediate 
 
-* You can run a test with the following command:
+
+__Running a test__
 ```
- /path/to/nextflow/nextflow run main.nf -profile test,docker
+You can run a simple test using the test config file. Run the following command: 
+
+/path/to/nextflow/nextflow run main.nf -profile test,docker
  
- [This will automatically read the sample input file from the /data folder]
+[This will automatically read the sample input file from the /data folder. The output will be stored in /output folder]
  
 ```
-* To resume workflow execution from where it stopped, use the '-resume' command as shown below:
+__Resume workflow execution__
 ```
+To resume workflow execution from where it stopped, use the '-resume' command as shown below:
+
 /path/to/nextflow/nextflow run main.nf -profile test,docker -resume
 ```
 
 ## Output ##
 
-The final iMPP output should contain four files.
+The final iMPP output will be in the <outdir> folder [default ~/output] and should contain four files.
 ```
 1. orfs.ffn : This file lists nucleotide sequences.
 E.g.
->1_+
-GTTGTTACCTCGTTACCTTTGGTCGAAAAAAAAAGCCCGCACTGTCAGGTGCGGGCTTTTTTCTGTGTTTCCTGTACGCGTCAGCCCGCACCGTTACCTG
-TGGTAATGGTGATGGTGGTGGTAATGGTGGTGCTAATGCGTTTCATGGATGTTGTGTACTCTGTAATTTTTATCTGTCTGTGCGCTATGCCTATATTGGT
-TAAAGTATTTAGTGACCTAAGTCAA
->2,17,14_90_191_+
-TTGAAGTTCGGCGGTACATCAGTGGCAAATGCAGAACGTTTTCTGCGTGTTGCCGATATTCTGGAAAGCAATGCCAGGCAGGGGCAGGTGGCCACCGTCC
-TCTCTGCCCCCGCCAAAATCACCAACCACCTGGTGGCGATGATTGAAAAAACCATTAGCGGCCAGGATGCTTTACCCAATATCAGCGATGCCGAACGTAT
-TTTTGCCGAACTTTTGACGGGACTCGCCGCCGCCCAGCCGGGGTTCCCGCTGGCGCAATTGAAAACTTTCGTCGATCAGGAATTTGCCCAAATAAAACAT
-GTCCTGCATGGCATTAGTTTGTTGGGGCAGTGCCCGGATAGCATCAACGCTGCGCTGATTTGCCGTGGCGAGAAAATGTCGATCGCCATTATGGCCGGCG
+>0_2_97_+
+AGCCTAGCGCTCAAATTGCTGGACGAGATCAATGAAGTCTGGCTCTTTGATTGTGGTGAAGCGACACAGAATCAAATTTTAGAAACGACCATACGT
+>3_1_99_-
+AGCTATTCTCAAGTTTCCGAATTACTAACTAAGAACCTCAATACACCTGCCCATGTAGAACCTGTTATGTCGCCTAAAGGAATGTATGACTACTTCACT
+>4_2_97_+
+ATCATTGCTCCTCCAGAGCACAACCATACGATCTCTGCTTCCCTCAAGTCTTTTCTTGAATGGCTTTCTTTCGAGGTGCATCCATTTGAAAACAAA
 
 2. orfs.faa : This file lists the amino acid sequences of the nucleotide sequneces in "[out_file_name].ffn".
 E.g.
->17,51,49,46,41_2_136_+
-VVTSLPLVEKKSPHCQVRAFFCVSCTRQPAPLPVVMVMVVVMVVLMRFMDVVYSVIFICLCAMPILVKVFSDLSQ
->2,17,14_90_191_+
-LKFGGTSVANAERFLRVADILESNARQGQVATVLSAPAKITNHLVAMIEKTISGQDALPNISDAERIFAELLTGLAAAQPGFPLAQLKTFVDQEFAQIKH
-VLHGISLLGQCPDSINAALICRGEKMSIAIMAGVLEARGHNVTVIDPVEKLLAVGHYLESTVDIAESTRRIAASRIPADHMVLMAGFTAGNEKGELVVLG
-RNGSDYSAAVLAACLRADCCEIWTDVDGVYTCDPRQVPDARLLKSMSYQEAMELSYFGAKVLHPRTITPIAQFQIPCLIKNTGNPQAPGTLIGASRDEDE
+>0_2_97+
+SLALKLLDEINEVWLFDCGEATQNQILETTIR
+>3_1_99_-
+SYSQVSELLTKNLNTPAHVEPVMSPKGMYDYFT
+>4_2_97_+
+IIAPPEHNHTISASLKSFLEWLSFEVHPFENK
 
 3. orfs.gff : This file lists the gene prediction results in gff format.
 E.g.
 ##gff-version 3
-2,17,14			FGS	CDS	90	191	.	+	2	ID=2,17,14_90_191_+;product=predicted protein
-3,17,15			FGS	CDS	90	194	.	+	2	ID=3,17,15_90_194_+;product=predicted protein
-14,51,49,46,40,59,58	FGS	CDS	2	136	.	+	1	ID=14,51,49,46,40,59,58_2_136_+;product=predicted protein
-15,73,40,59,58		FGS	CDS	1	132	.	+	0	ID=15,73,40,59,58_1_132_+;product=predicted protein
+0	FGS	CDS	2	97	.	+	1	ID=0_2_97_+;product=predicted protein
+3	FGS	CDS	1	99	.	-	0	ID=3_1_99_-;product=predicted protein
+4	FGS	CDS	2	97	.	+	1	ID=4_2_97_+;product=predicted protein
 
 4. assembled_proteins.faa : This file containts the assembled protein sequences.
 E.g.
@@ -148,6 +150,4 @@ LRSNLLKDFQEVIDDSKLKVVRNGYNGEILEVPAEKR
 ATNFPSIVDSELIELITDLLPTRCLIDTQVFDEEGFYRM
 >1	99-98	3
 HLFVTIKEVSDNPVLHPIKTLFIEDLCVDQAARGQKIGDQLYQFAVNYAREIGCYNLTLNVWN
->6	99-98	3
-AWELMLKAYIINNNGEESIYFKDSKDRTISLENAVE
 ```
