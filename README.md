@@ -23,7 +23,7 @@ __Install Java__
 
 Make sure that Java is installed. (11 or higher) (Installation instructions can be found [here](https://www.oracle.com/java/technologies/downloads/))
 ```
-java --version
+java -version
 ```
 
 __Install Docker__
