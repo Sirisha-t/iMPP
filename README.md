@@ -28,11 +28,13 @@ java -version
 
 __Install Docker__
 
-Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). Instructions to install Docker for Windows can be found [here](https://docs.docker.com/desktop/install/windows-install/) and for Mac [here](https://docs.docker.com/desktop/install/mac-install/).
+Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). 
+Docker installation instructions for different platforms can be found below:
+* Linux [here](https://docs.docker.com/desktop/install/linux-install/)
+* Windows [here](https://docs.docker.com/desktop/install/windows-install/) [Note: Windows users running Docker on WSL2 have to start the Docker Desktop application prior to running the iMPP workflow]
+* Mac [here](https://docs.docker.com/desktop/install/mac-install/)
 
-Also follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the [nextflow documentation](https://www.nextflow.io/docs/latest/config.html#scope-docker). Non-privileged users can run Docker following the instrcutions provided [here](https://docs.docker.com/engine/security/rootless/).
-
-Note: Windows users running Docker on WSL2 have to start the Docker Desktop application prior to running the iMPP workflow. 
+Follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the [nextflow documentation](https://www.nextflow.io/docs/latest/config.html#scope-docker). Non-privileged users can run Docker following the instrcutions provided [here](https://docs.docker.com/engine/security/rootless/).
 
 ```
 To install Docker using CLI (Linux):
