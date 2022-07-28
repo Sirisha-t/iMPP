@@ -30,13 +30,13 @@ __Install Docker__
 
 Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). 
 Docker installation instructions for different platforms can be found below:
-* [Linux](https://docs.docker.com/desktop/install/linux-install/) [More information on installing Docker for different Linux-based OS can be found [here](https://runnable.com/docker/install-docker-on-linux)]
+* [Linux](https://docs.docker.com/desktop/install/linux-install/) (More information on installing Docker for different Linux-based OS can be found [here](https://runnable.com/docker/install-docker-on-linux))
 ```
 To install Docker using CLI (Linux):
 curl -fsSL https://get.docker.com | sh;
-[Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.sock]
+(Note: In case of permission denied issue, type: sudo chmod 666 /var/run/docker.sock)
 ```
-* [Windows](https://docs.docker.com/desktop/install/windows-install/) [Note: Windows users running Docker on WSL2 have to start the Docker Desktop application prior to running the iMPP workflow. More instructions on WSL2 can be found [here](https://docs.docker.com/desktop/windows/wsl/) and [here](https://docs.microsoft.com/en-us/windows/wsl/install)]
+* [Windows](https://docs.docker.com/desktop/install/windows-install/) (Note: Windows users running Docker on WSL2 have to start the Docker Desktop application prior to running the iMPP workflow. More instructions on WSL2 can be found [here](https://docs.docker.com/desktop/windows/wsl/) and [here](https://docs.microsoft.com/en-us/windows/wsl/install))
 * [Mac](https://docs.docker.com/desktop/install/mac-install/)
 
 Follow the post-installation step to manage Docker as a non-root user ([instructions for Linux](https://docs.docker.com/engine/install/linux-postinstall/)), otherwise you will need to change the sudo option in nextflow docker config scope as described in the [nextflow documentation](https://www.nextflow.io/docs/latest/config.html#scope-docker). Non-privileged users can follow [these instructions](https://docs.docker.com/engine/security/rootless/) to run Docker .
