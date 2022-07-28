@@ -53,13 +53,12 @@ Optionally, move the nextflow file to a directory accessible by your $PATH varia
 
 __Download the latest release__
 ```
-Extract the zip file, or tar file provided in the latest impp-v1.0.0 release:
+1. Extract the zip file, or tar file provided in the latest impp-v1.0.0 release:
 $unzip iMPP-1.0.0.zip
 or
 $tar -xvf iMPP-1.0.0.tar.gz
 
-Then,go to the project directory (/iMPP-1.0.0):
-
+2. Then,go to the project directory (/iMPP-1.0.0):
 $cd iMPP-1.0.0/
 ```
 
