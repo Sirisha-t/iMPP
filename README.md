@@ -30,7 +30,7 @@ __Install Docker__
 
 Follow [Docker Documentation](https://docs.docker.com/get-docker/) (docker CE is sufficient). 
 Docker installation instructions for different platforms can be found below:
-* [Linux](https://docs.docker.com/desktop/install/linux-install/) [More information on installing Docker for different Linux-based OS can be found [here](https://runnable.com/docker/install-docker-on-linux)
+* [Linux](https://docs.docker.com/desktop/install/linux-install/) [More information on installing Docker for different Linux-based OS can be found [here](https://runnable.com/docker/install-docker-on-linux)]
 ```
 To install Docker using CLI (Linux):
 curl -fsSL https://get.docker.com | sh;
