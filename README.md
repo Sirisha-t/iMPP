@@ -58,7 +58,7 @@ $unzip iMPP-1.0.0.zip
 or
 $tar -xvf iMPP-1.0.0.tar.gz
 
-2. Then,go to the project directory (/iMPP-1.0.0):
+2. Go to the project directory (/iMPP-1.0.0):
 $cd iMPP-1.0.0/
 ```
 
