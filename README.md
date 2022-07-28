@@ -39,7 +39,7 @@ curl -fsSL https://get.docker.com | sh;
 * [Windows](https://docs.docker.com/desktop/install/windows-install/) [Note: Windows users running Docker on WSL2 have to start the Docker Desktop application prior to running the iMPP workflow. More instructions on WSL2 can be found [here](https://docs.docker.com/desktop/windows/wsl/) and [here](https://docs.microsoft.com/en-us/windows/wsl/install)]
 * [Mac](https://docs.docker.com/desktop/install/mac-install/)
 
-Follow the post-installation step to manage Docker as a non-root user ([here](https://docs.docker.com/engine/install/linux-postinstall/) for Linux), otherwise you will need to change the sudo option in nextflow docker config scope as described in the [nextflow documentation](https://www.nextflow.io/docs/latest/config.html#scope-docker). Non-privileged users can run Docker following the instrcutions provided [here](https://docs.docker.com/engine/security/rootless/).
+Follow the post-installation step to manage Docker as a non-root user ([instructions for Linux](https://docs.docker.com/engine/install/linux-postinstall/)), otherwise you will need to change the sudo option in nextflow docker config scope as described in the [nextflow documentation](https://www.nextflow.io/docs/latest/config.html#scope-docker). Non-privileged users can follow [these instructions](https://docs.docker.com/engine/security/rootless/) to run Docker .
 
 
 __Install Nextflow__
