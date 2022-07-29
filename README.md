@@ -53,11 +53,13 @@ Optionally, move the nextflow file to a directory accessible by your $PATH varia
 
 __Download the latest release__
 ```
-1. Extract the zip file, or tar file provided in the current release (https://github.com/Sirisha-t/iMPP/releases/tag/current):
+1. Download the current release (https://github.com/Sirisha-t/iMPP/releases/tag/current):
 $wget https://github.com/Sirisha-t/iMPP/archive/refs/tags/current.zip
+
+2. Unzip the file 'current.zip'
 $unzip current.zip
 
-2. Go to the project directory (/iMPP-current):
+3. Go to the project directory (/iMPP-current):
 $cd iMPP-current/
 ```
 
