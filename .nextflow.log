@@ -1,0 +1,162 @@
+Oct-12 13:46:44.731 [main] DEBUG nextflow.cli.Launcher - $> nextflow main_test.nf --forward ../impp_check/data/supp/sds1/strep.forward.fq --reverse ../impp_check/data/supp/sds1/strep.reverse.fq --outdir ../impp_check/results/nextflow -profile base,docker
+Oct-12 13:46:44.857 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.6
+Oct-12 13:46:44.890 [main] INFO  nextflow.cli.CmdRun - Launching `main_test.nf` [thirsty_solvay] - revision: f794e209a0
+Oct-12 13:46:44.908 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/nextflow.config
+Oct-12 13:46:44.909 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/nextflow.config
+Oct-12 13:46:44.941 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `base,docker`
+Oct-12 13:46:46.259 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [test, docker, base]
+Oct-12 13:46:46.299 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/users/tsirisha/.nextflow/plugins
+Oct-12 13:46:46.301 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Oct-12 13:46:46.313 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Oct-12 13:46:46.314 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Oct-12 13:46:46.317 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Oct-12 13:46:46.327 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Oct-12 13:46:46.383 [main] DEBUG nextflow.Session - Session uuid: 576933b2-134e-42dc-975e-7f7fe34a8717
+Oct-12 13:46:46.383 [main] DEBUG nextflow.Session - Run name: thirsty_solvay
+Oct-12 13:46:46.384 [main] DEBUG nextflow.Session - Executor pool size: 64
+Oct-12 13:46:46.404 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.6 build 5660
+  Created: 21-12-2021 16:55 UTC (10:55 CDT)
+  System: Linux 3.10.0-1160.42.2.el7.x86_64
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_302-b08
+  Encoding: UTF-8 (UTF-8)
+  Process: 19728@watson.ittc.ku.edu [129.237.120.249]
+  CPUs: 64 - Mem: 1007.6 GB (78.3 GB) - Swap: 62.5 GB (59.4 GB)
+Oct-12 13:46:46.424 [main] DEBUG nextflow.Session - Work-dir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work [ext2/ext3]
+Oct-12 13:46:46.440 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Oct-12 13:46:46.451 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Oct-12 13:46:46.518 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 65; maxThreads: 1000
+Oct-12 13:46:46.733 [main] DEBUG nextflow.Session - Session start invoked
+Oct-12 13:46:48.395 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Oct-12 13:46:48.565 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:mergeFastqFiles` matches process mergeFastqFiles
+Oct-12 13:46:48.572 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.572 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.577 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Oct-12 13:46:48.583 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=64; memory=1007.6 GB; capacity=64; pollInterval=100ms; dumpInterval=5m
+Oct-12 13:46:48.604 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 65; maxThreads: 1000
+Oct-12 13:46:48.672 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.672 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.680 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:callFGS` matches process callFGS
+Oct-12 13:46:48.681 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.681 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.686 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:callSGAAssembly` matches process callSGAAssembly
+Oct-12 13:46:48.686 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.686 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.691 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:callSPAdesAssembly` matches process callSPAdesAssembly
+Oct-12 13:46:48.691 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.691 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.696 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.696 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.702 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.702 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.710 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.710 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.720 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.720 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.725 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.725 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.730 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.730 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.734 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:callBWA` matches process callBWA
+Oct-12 13:46:48.735 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.735 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.739 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.739 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.743 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:peptideAssembly_first` matches process peptideAssembly_first
+Oct-12 13:46:48.743 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.744 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.747 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.747 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.754 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:alignSixFrametoAssembly` matches process alignSixFrametoAssembly
+Oct-12 13:46:48.755 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.755 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.763 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.763 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.767 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:peptideAssembly_second` matches process peptideAssembly_second
+Oct-12 13:46:48.768 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.768 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.773 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Oct-12 13:46:48.773 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Oct-12 13:46:48.777 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: peptideAssembly_first, alignSixFrametoAssembly, callFGSPaths, refinePlassInput, peptideAssembly_second, callFGS, cleanOutput, mergeFastqFiles, callSGAAssembly, convertFastq, callSPAdesAssembly, callMPD, callIMPP, sixFrameTranslate, splitEdges, modifyAssemblyOut, getMergedGraph, splitPaths, callFGSEdges, callBWA
+Oct-12 13:46:48.778 [main] DEBUG nextflow.Session - Ignite dataflow network (22)
+Oct-12 13:46:48.787 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > mergeFastqFiles
+Oct-12 13:46:48.788 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > convertFastq
+Oct-12 13:46:48.788 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callFGS
+Oct-12 13:46:48.788 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callSGAAssembly
+Oct-12 13:46:48.789 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callSPAdesAssembly
+Oct-12 13:46:48.790 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > getMergedGraph
+Oct-12 13:46:48.790 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > splitEdges
+Oct-12 13:46:48.790 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callFGSEdges
+Oct-12 13:46:48.790 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callIMPP
+Oct-12 13:46:48.791 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > splitPaths
+Oct-12 13:46:48.791 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callFGSPaths
+Oct-12 13:46:48.791 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > callBWA
+Oct-12 13:46:48.792 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > sixFrameTranslate
+Oct-12 13:46:48.793 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > peptideAssembly_first
+Oct-12 13:46:48.793 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > modifyAssemblyOut
+Oct-12 13:46:48.796 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > alignSixFrametoAssembly
+Oct-12 13:46:48.796 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > refinePlassInput
+Oct-12 13:46:48.796 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > peptideAssembly_second
+Oct-12 13:46:48.797 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > cleanOutput
+Oct-12 13:46:48.797 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Oct-12 13:46:48.797 [main] DEBUG nextflow.Session - Session await
+Oct-12 13:46:49.295 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Oct-12 13:46:49.300 [Task submitter] INFO  nextflow.Session - [c2/14adaf] Submitted process > mergeFastqFiles (1)
+Oct-12 13:46:51.399 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: mergeFastqFiles (1); status: COMPLETED; exit: 0; error: -; workDir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/c2/14adaf797e763bd979dd0e477b426b]
+Oct-12 13:46:51.764 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Oct-12 13:46:51.765 [Task submitter] INFO  nextflow.Session - [f6/b35cba] Submitted process > convertFastq (1)
+Oct-12 13:46:52.046 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: convertFastq (1); status: COMPLETED; exit: 0; error: -; workDir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/f6/b35cba79f74c3dcc2191d5e0df5edf]
+Oct-12 13:46:52.440 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Oct-12 13:46:52.441 [Task submitter] INFO  nextflow.Session - [6b/895ccd] Submitted process > callFGS (1)
+Oct-12 13:46:52.573 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Oct-12 13:46:52.573 [Task submitter] INFO  nextflow.Session - [45/c4dbbe] Submitted process > callSGAAssembly (1)
+Oct-12 13:46:52.577 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Oct-12 13:46:52.577 [Task submitter] INFO  nextflow.Session - [7f/db8a67] Submitted process > callSPAdesAssembly (1)
+Oct-12 13:49:01.152 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: callSGAAssembly (1); status: COMPLETED; exit: 0; error: -; workDir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/45/c4dbbeb07fbfff7a969e7c16edfc9c]
+Oct-12 13:49:01.560 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: callSPAdesAssembly (1); status: COMPLETED; exit: 0; error: -; workDir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/7f/db8a672faa1899280cf7a81f8d248a]
+Oct-12 13:49:45.609 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: callFGS (1); status: COMPLETED; exit: 0; error: -; workDir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/6b/895ccd804846dd728b5900a2d95454]
+Oct-12 13:49:46.446 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Oct-12 13:49:46.446 [Task submitter] INFO  nextflow.Session - [82/bd0814] Submitted process > getMergedGraph (1)
+Oct-12 13:49:48.495 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: getMergedGraph (1); status: COMPLETED; exit: 134; error: -; workDir: /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/82/bd08142ec6445d7c225adcbcf4685a]
+Oct-12 13:49:48.518 [Task monitor] ERROR nextflow.processor.TaskProcessor - Error executing process > 'getMergedGraph (1)'
+
+Caused by:
+  Process `getMergedGraph (1)` terminated with an error exit status (134)
+
+Command executed:
+
+  impp_modASQG -g assembly.ec.rmdup.asqg
+  impp_getSG -g assembly.ec.rmdup.mod.asqg -r reads.fastq -f reads.gff
+  mv assembly.ec.rmdup.mod.StringGraph.fq  og.fq
+  
+  bwa index -p contigs.index contigs.fasta
+  bwa mem contigs.index og.fq -T 45 -t 1 -k 19 -o og.sam
+  
+  impp_mergeSG og.fq og.sam contigs.fasta
+
+Command exit status:
+  134
+
+Command output:
+  Graph initialized
+
+Command error:
+  terminate called after throwing an instance of 'std::invalid_argument'
+    what():  stoi
+  .command.sh: line 2:     8 Aborted                 (core dumped) impp_modASQG -g assembly.ec.rmdup.asqg
+
+Work dir:
+  /home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/82/bd08142ec6445d7c225adcbcf4685a
+
+Tip: you can replicate the issue by changing to the process work dir and entering the command `bash .command.run`
+Oct-12 13:49:48.524 [Task monitor] DEBUG nextflow.Session - Session aborted -- Cause: Process `getMergedGraph (1)` terminated with an error exit status (134)
+Oct-12 13:49:48.543 [main] DEBUG nextflow.Session - Session await > all process finished
+Oct-12 13:49:48.558 [Task monitor] INFO  nextflow.script.BaseScript - ERROR: iMPP Pipeline execution stopped with the following message: terminate called after throwing an instance of 'std::invalid_argument'
+  what():  stoi
+/home/tsirisha/Projects/Project1/nf-impp-nar-rev3/iMPP/work/82/bd08142ec6445d7c225adcbcf4685a/.command.sh: line 2:     8 Aborted                 (core dumped) impp_modASQG -g assembly.ec.rmdup.asqg
+Oct-12 13:49:48.558 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Oct-12 13:49:48.565 [main] INFO  nextflow.script.BaseScript - iMPP Pipeline completed at: 2022-10-12T13:49:48.561-05:00
+Oct-12 13:49:48.565 [main] INFO  nextflow.script.BaseScript - Execution status: failed
+Oct-12 13:49:48.571 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=5; failedCount=1; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=7m 13s; failedDuration=2s; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=3; peakCpus=3; peakMemory=0; ]
+Oct-12 13:49:48.739 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Oct-12 13:49:48.748 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
