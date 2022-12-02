@@ -1,9 +1,10 @@
-## Instructions to run benchmarking on datasets
-## All benchmarking scripts can be found in the /benchmark folder and its subfolders
+__Instructions to run benchmarking on datasets__
+__All benchmarking scripts can be found in the /benchmark folder and its subfolders__
 
-## Please clone the Github repository using the following command
+__Please clone the Github repository using the following command
+```
 git clone https://github.com/Sirisha-t/iMPP.git
-
+```
 ## Go to the directory /iMPP/benchmark
 cd iMPP/benchmark
 
