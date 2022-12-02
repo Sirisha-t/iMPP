@@ -23,11 +23,11 @@ done
 if [ $genecaller = "fgs" ];
 then
 	bash $SCRIPT/runFGS_analysis.sh -i $input -p $paired -t $dstype
-#elif [$genecaller == "mpd"];
-#then
-#	bash $SCRIPT/runMPD_analysis.sh -i $input -p $paired -t $dstype
-#else
-#	echo "Wrong genecaller parameter provided. Please use either 'fgs' or 'mpd'"
+elif [$genecaller == "mpd"];
+then
+	bash $SCRIPT/runMPD_analysis.sh -i $input -p $paired -t $dstype
+else
+	echo "Wrong genecaller parameter provided. Please use either 'fgs' or 'mpd'"
 fi
 
 
