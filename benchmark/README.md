@@ -12,6 +12,7 @@ cd iMPP/benchmark
 ```
 
 __Command line to run benchmarking on a simulated dataset (sds1 with 2x coverage) is provided below__
+
 For more details on the test dataset, please refer to Supplementary Methods and Results
 
 For testing on other datasets benchmarked in the manuscript, please download the reads from: https://cbb.ittc.ku.edu/iMPP.html
