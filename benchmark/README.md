@@ -1,4 +1,5 @@
-__Instructions to run benchmarking on datasets__
+### Instructions to run benchmarking on datasets
+
 __All benchmarking scripts can be found in the /benchmark folder and its subfolders__
 
 Please clone the Github repository using the following command
