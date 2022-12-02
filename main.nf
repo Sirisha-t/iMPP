@@ -552,7 +552,7 @@ process callMPD{
   script:
   """
   prodigal -i ${shortFile.baseName}.fq -d ${tag}.${outname}.short.${params.freq}.ffn -f gff -o ${tag}.${outname}.short.${params.freq}.gff -p meta -q -s ${tag}.${outname}.short.${params.freq}.genes -a ${tag}.${outname}.short.${params.freq}.faa
-  prodigal -i ${longFile.baseName}.fq -d ${tag}.${outname}.long.${params.freq}.ffn -f gff -o ${tag}.${outname}.long.${params.freq}.gff -p meta -q -s ${tag}.${outname}.long.${params.freq}.genes -a ${tag}.${outname}.long.${params.freq}.faa
+  prodigal -i ${longFile.baseName}.fq -d ${tag}.${outname}.long.${params.freq}.ffn -f gff -o ${tag}.${outname}.long.${params.freq}.gff -q -s ${tag}.${outname}.long.${params.freq}.genes -a ${tag}.${outname}.long.${params.freq}.faa
   cat ${tag}.${outname}.long.${params.freq}.genes ${tag}.${outname}.short.${params.freq}.genes > ${tag}.${outname}.merged.${params.freq}.genes
   cat ${tag}.${outname}.long.${params.freq}.gff ${tag}.${outname}.short.${params.freq}.gff > ${tag}.${outname}.merged.${params.freq}.gff
   cat ${tag}.${outname}.long.${params.freq}.ffn ${tag}.${outname}.short.${params.freq}.ffn > ${tag}.${outname}.merged.${params.freq}.ffn

@@ -1,0 +1,84 @@
+Dec-02 12:31:15.443 [main] DEBUG nextflow.cli.Launcher - $> nextflow /home/tsirisha/Projects/Project1/impp-nf/iMPP/main.nf --single data/strep.2x.d0.fq --genecaller fgs --outdir output -profile base,docker -with-report output/report.html -with-trace output/trace.txt -with-timeline output/timeline.html -resume
+Dec-02 12:31:15.542 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.6
+Dec-02 12:31:15.594 [main] INFO  nextflow.cli.CmdRun - Launching `/home/tsirisha/Projects/Project1/impp-nf/iMPP/main.nf` [curious_goodall] - revision: ea59c25a4e
+Dec-02 12:31:15.611 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /home/tsirisha/Projects/Project1/impp-nf/iMPP/nextflow.config
+Dec-02 12:31:15.614 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/tsirisha/Projects/Project1/impp-nf/iMPP/nextflow.config
+Dec-02 12:31:15.643 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `base,docker`
+Dec-02 12:31:16.904 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [test, docker, base]
+Dec-02 12:31:16.913 [main] WARN  nextflow.config.ConfigBuilder - It appears you have never run this project before -- Option `-resume` is ignored
+Dec-02 12:31:16.949 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/users/tsirisha/.nextflow/plugins
+Dec-02 12:31:16.950 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Dec-02 12:31:16.961 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Dec-02 12:31:16.962 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Dec-02 12:31:16.967 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Dec-02 12:31:16.980 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Dec-02 12:31:17.033 [main] DEBUG nextflow.Session - Session uuid: 6e896308-e539-4fd9-9ea1-5282098cfaf6
+Dec-02 12:31:17.033 [main] DEBUG nextflow.Session - Run name: curious_goodall
+Dec-02 12:31:17.033 [main] DEBUG nextflow.Session - Executor pool size: 64
+Dec-02 12:31:17.074 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.6 build 5660
+  Created: 21-12-2021 16:55 UTC (10:55 CDT)
+  System: Linux 3.10.0-1160.42.2.el7.x86_64
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_302-b08
+  Encoding: UTF-8 (UTF-8)
+  Process: 24095@watson.ittc.ku.edu [129.237.120.249]
+  CPUs: 64 - Mem: 1007.6 GB (37.9 GB) - Swap: 62.5 GB (35.6 GB)
+Dec-02 12:31:17.102 [main] DEBUG nextflow.Session - Work-dir: /home/tsirisha/Projects/Project1/impp-nf/script/benchmark/work [ext2/ext3]
+Dec-02 12:31:17.139 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Dec-02 12:31:17.149 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Dec-02 12:31:17.216 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 65; maxThreads: 1000
+Dec-02 12:31:17.457 [main] DEBUG nextflow.Session - Session start invoked
+Dec-02 12:31:17.461 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /home/tsirisha/Projects/Project1/impp-nf/script/benchmark/output/trace.txt
+Dec-02 12:31:19.682 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Dec-02 12:31:19.884 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Dec-02 12:31:19.885 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-02 12:31:19.890 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Dec-02 12:31:19.896 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=64; memory=1007.6 GB; capacity=64; pollInterval=100ms; dumpInterval=5m
+Dec-02 12:31:19.918 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 65; maxThreads: 1000
+Dec-02 12:31:19.996 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:callSGAAssembly` matches process callSGAAssembly
+Dec-02 12:31:19.997 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Dec-02 12:31:19.998 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-02 12:31:20.003 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Dec-02 12:31:20.004 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-02 12:31:20.009 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:callSPAdesAssembly` matches process callSPAdesAssembly
+Dec-02 12:31:20.010 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Dec-02 12:31:20.010 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-02 12:31:20.029 [main] DEBUG nextflow.Session - Session aborted -- Cause: No such property: mpd for class: nextflow.script.WorkflowBinding
+Dec-02 12:31:20.061 [main] ERROR nextflow.cli.Launcher - @unknown
+groovy.lang.MissingPropertyException: No such property: mpd for class: nextflow.script.WorkflowBinding
+	at groovy.lang.Binding.getVariable(Binding.java:61)
+	at nextflow.script.WorkflowBinding.getVariable(WorkflowBinding.groovy:132)
+	at groovy.lang.Binding.getProperty(Binding.java:116)
+	at nextflow.script.WorkflowBinding.getProperty(WorkflowBinding.groovy:121)
+	at org.codehaus.groovy.runtime.InvokerHelper.getProperty(InvokerHelper.java:194)
+	at groovy.lang.Closure.getPropertyTryThese(Closure.java:320)
+	at groovy.lang.Closure.getPropertyDelegateFirst(Closure.java:310)
+	at groovy.lang.Closure.getProperty(Closure.java:296)
+	at org.codehaus.groovy.runtime.callsite.PogoGetPropertySite.getProperty(PogoGetPropertySite.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callGroovyObjectGetProperty(AbstractCallSite.java:341)
+	at Script_27a5a8b0$_runScript_closure5$_closure31.doCall(Script_27a5a8b0:235)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1035)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at nextflow.script.WorkflowDef.run0(WorkflowDef.groovy:186)
+	at nextflow.script.WorkflowDef.run(WorkflowDef.groovy:170)
+	at nextflow.script.BindableDef.invoke_a(BindableDef.groovy:52)
+	at nextflow.script.ChainableDef$invoke_a.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at nextflow.script.BaseScript.runDsl2(BaseScript.groovy:191)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:200)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:221)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:212)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:120)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:308)
+	at nextflow.cli.Launcher.run(Launcher.groovy:480)
+	at nextflow.cli.Launcher.main(Launcher.groovy:639)
