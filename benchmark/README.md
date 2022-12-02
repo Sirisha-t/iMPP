@@ -25,7 +25,7 @@ Wrapper script (analysis.sh) command line arguments:
      -t (comp/ref; comp=complete dataset, without reference. ref=subsampled dataset, with reference)
 ```
 
-__Run the script analysis.sh with the following command line arguments to benchmark with FGS__
+__Run the script 'analysis.sh' with the following command line arguments to benchmark with FGS__
 
 NOTE: Before running the follwing command, please ensure the path/to/scripts are all correctly specified in ~/benchmark/scripts/runFGS_analysis.sh (update to include your local path )
 
@@ -35,7 +35,7 @@ bash analysis.sh -i test/sds1.2x.fq -p 0 -g fgs -t ref
 ```
 Note: Run 'analysis.sh' script directly from the benchmark folder. If not, you will need to update all the paths in the analysis scripts prior to running it. 
 
-__Run the script analysis.sh with the following command line arguments to benchmark with Prodigal__
+__Run the script 'analysis.sh' with the following command line arguments to benchmark with Prodigal__
 NOTE: Before running the follwing command, please ensure the path/to/scripts are all correctly specified in ~/benchmark/scripts/runMPD_analysis.sh (update to include your local path )
 ```
 bash analysis.sh -i test/sds1.2x.fq -p 0 -g mpd -t ref
