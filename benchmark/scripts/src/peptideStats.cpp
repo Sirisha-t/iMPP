@@ -61,7 +61,6 @@ void load_dmd(const std::string & refread,\
               const std::string & dmdprot,\
               const std::string & outf,\
               const std::string & refin,\
-              const std::string & contout,\
               int & cov)
 {
 
@@ -207,7 +206,6 @@ void load_dmd(const std::string & refread,\
     fin2.open(contin.c_str());
     std::ofstream fout, fout2;
     fout.open(outf.c_str());
-    fout2.open(contout.c_str());
     if(!fin2.is_open())
         std::cout<<"Cannot open file\n";
     else{
@@ -450,18 +448,12 @@ void load_dmd(const std::string & refread,\
 
       fin.clear();
       fin.close();
-      fout<<"Seqcov"<<"\t"<<"Contig"<<"\t"<<"Aligned Ref"<<"\t"<<"Ref"<<"\t"<<"Cont-Tot"<<"\t"<<"Read"<<"\t"<<"All Read(Cont)"<<"\t"<<"All Read (Ref)"<<"\t"<<"Sp(cont)"<<"\t"<<"Sn(cont)"<<"\t"<<"Sp(read)"<<"\t"<<"Sn(read)\n";
-      fout<<60<<"\t"<<align_cont60<<"\t"<<align_ref60<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount60.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont60/total_len)*100<<"\t"<<((double)align_ref60/total_ref_len)*100<<"\t"<<((double)readCount60.size()/readcount)*100<<"\t"<<((double)readCount60.size()/allreads_count)*100<<"\n" ;
-      fout<<70<<"\t"<<align_cont70<<"\t"<<align_ref70<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount70.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont70/total_len)*100<<"\t"<<((double)align_ref70/total_ref_len)*100<<"\t"<<((double)readCount70.size()/readcount)*100<<"\t"<<((double)readCount70.size()/allreads_count)*100<<"\n";
-	    fout<<80<<"\t"<<align_cont80<<"\t"<<align_ref80<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount80.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont80/total_len)*100<<"\t"<<((double)align_ref80/total_ref_len)*100<<"\t"<<((double)readCount80.size()/readcount)*100<<"\t"<<((double)readCount80.size()/allreads_count)*100<<"\n";
-	    fout<<90<<"\t"<<align_cont90<<"\t"<<align_ref90<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount90.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont90/total_len)*100<<"\t"<<((double)align_ref90/total_ref_len)*100<<"\t"<<((double)readCount90.size()/readcount)*100<<"\t"<<((double)readCount90.size()/allreads_count)*100<<"\n";
+      fout<<"Seqcov"<<"\t"<<"Contig"<<"\t"<<"Ref"<<"\t"<<"Cont-Tot"<<"\t"<<"Read"<<"\t"<<"All Read(Cont)"<<"\t"<<"All Read (Ref)"<<"\t"<<"Sp(cont)"<<"\t"<<"Sn(cont)"<<"\t"<<"Sp(read)"<<"\t"<<"Sn(read)\n";
+      fout<<60<<"\t"<<align_cont60<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount60.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont60/total_len)*100<<"\t"<<((double)readCount60.size()/readcount)*100<<"\n" ;
+      fout<<70<<"\t"<<align_cont70<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount70.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont70/total_len)*100<<"\t"<<((double)readCount70.size()/readcount)*100<<"\n";
+	    fout<<80<<"\t"<<align_cont80<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount80.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont80/total_len)*100<<"\t"<<((double)readCount80.size()/readcount)*100<<"\n";
+	    fout<<90<<"\t"<<align_cont90<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount90.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont90/total_len)*100<<"\t"<<((double)readCount90.size()/readcount)*100<<"\n";
 
-      std::cout<<"File : "<<dmdin<<"\n";
-      std::cout<<"Seqcov"<<"\t"<<"Contig"<<"\t"<<"Aligned Ref"<<"\t"<<"Ref"<<"\t"<<"Cont-Tot"<<"\t"<<"Read"<<"\t"<<"All Read(Cont)"<<"\t"<<"All Read (Ref)"<<"\t"<<"Sp(cont)"<<"\t"<<"Sn(cont)"<<"\t"<<"Sp(read)"<<"\t"<<"Sn(read)\n";
-      std::cout<<60<<"\t"<<align_cont60<<"\t"<<align_ref60<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount60.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont60/total_len)*100<<"\t"<<((double)align_ref60/total_ref_len)*100<<"\t"<<((double)readCount60.size()/readcount)*100<<"\t"<<((double)readCount60.size()/allreads_count)*100<<"\n" ;
-      std::cout<<70<<"\t"<<align_cont70<<"\t"<<align_ref70<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount70.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont70/total_len)*100<<"\t"<<((double)align_ref70/total_ref_len)*100<<"\t"<<((double)readCount70.size()/readcount)*100<<"\t"<<((double)readCount70.size()/allreads_count)*100<<"\n";
-	    std::cout<<80<<"\t"<<align_cont80<<"\t"<<align_ref80<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount80.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont80/total_len)*100<<"\t"<<((double)align_ref80/total_ref_len)*100<<"\t"<<((double)readCount80.size()/readcount)*100<<"\t"<<((double)readCount80.size()/allreads_count)*100<<"\n";
-	    std::cout<<90<<"\t"<<align_cont90<<"\t"<<align_ref90<<"\t"<<total_ref_len<<"\t"<<total_len<<"\t"<<readCount90.size()<<"\t"<<readcount<<"\t"<<allreads_count<<"\t"<<((double)align_cont90/total_len)*100<<"\t"<<((double)align_ref90/total_ref_len)*100<<"\t"<<((double)readCount90.size()/readcount)*100<<"\t"<<((double)readCount90.size()/allreads_count)*100<<"\n";
 
 }
 }
@@ -476,13 +468,12 @@ int main(int argc, char * argv[])
   	std::string coverage = argv[6];
   	int cov = std::stoi(coverage);
 	std::string outfile = dmd_in.substr(0,dmd_in.find_last_of(".")) + ".seqlen." + coverage + ".count";
-  	std::string contig_30 = contig_len_in.substr(0,contig_len_in.find_last_of(".")) + "." + coverage + ".fas";
 
 	//StringIntMap ReadNameMap;
 	StringIntegerMap ReadNameMap;
  	 //StringIntegerMap RefMap;
 	std::cout<<"Reading file..\n";
-	load_dmd(refin, dmd_in,contig_len_in,ReadNameMap,dmd_protdb, outfile, ref_prot_len, contig_30, cov);
+	load_dmd(refin, dmd_in,contig_len_in,ReadNameMap,dmd_protdb, outfile, ref_prot_len, cov);
 
 	return 0;
 }

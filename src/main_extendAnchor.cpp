@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
   else{
       StrGraph* e_g = new StrGraph();
       //if(kmer_len > 0){
-       // e_g->readSPAdesFile(graph_name, kmer_len);
-       // ff_graph = true;
-      //}
+        //e_g->readSPAdesFile(graph_name, kmer_len);
+        //ff_graph = true;
+     // }
      // else{
       e_g->readSGFile(graph_name);
 

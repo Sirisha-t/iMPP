@@ -22,11 +22,13 @@ int main(int argc, char* argv[])  {
 
     AssemblyGraph *graph = new AssemblyGraph;
     if( graph->IsInitialized()){
-    
-    std::string outname = asqg_graph.substr(0,asqg_graph.find_last_of('.')) + ".mod.asqg";
+    string outname = asqg_graph.substr(0,asqg_graph.find_last_of('.')) + ".mod.asqg";
     cout<<"Graph initialized\n";
     t=clock();
-    graph->LoadGraphASQG(asqg_graph);   
+    graph -> RenameASQG(asqg_graph);
+    cout<<"DEBUG: after renaming asqg"<<endl;
+    string asqg_rename = asqg_graph.substr(0,asqg_graph.find_last_of('.')) + ".rename.asqg";
+    graph->LoadGraphASQG(asqg_rename);   
     cout << "DEBUG: after loading graph:" << endl;
     graph->CheckGraphValidity();
     graph->PrintInfo(false);

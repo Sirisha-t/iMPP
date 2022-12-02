@@ -50,6 +50,10 @@ class GraphEssential {
     //    file: the output file to write into
     void WriteGraphASQG(const std::string & file);
 
+    //rename headers in asqg file
+    void RenameASQG(const std::string &file);
+
+
     // loads graph from file
     void LoadGraph(const std::string &file);
 

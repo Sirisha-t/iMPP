@@ -201,7 +201,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
     int p = 0, q = 0;
     while(p < seq.size())
     {
-      while((p < seq.size()) && taken_2D[ref_id][p]) p++;
+      while((p < seq.size()) && taken_2D[ref_id][p])  p++;
       if(p - q > 200)
       {
         std::string new_seq = seq.substr(q, p-q);
@@ -230,6 +230,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
       q = p;
     }
 
+
     // merge
     if(it2 != this_terminal.end())
     {
@@ -242,9 +243,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
       {
         int first_read_id = p_read_on_node[node1][0];
         int len = pos1 + p_read_length[first_read_id] - s - 2;
-        //std::cout<<seq<<"\t"<<s+1<<"\t"<<len<<"\n";
         std::string new_seq = seq.substr(s+1, len);
-	//std::cout<<new_seq<<"\n";
         IntegerVector read_on_this_node, loc_on_this_node;
         read_on_this_node.push_back(first_read_id);
         loc_on_this_node.push_back(pos1 - s + 1);
@@ -285,9 +284,11 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
           int first_read_id = p_read_on_node[node2][0];
           int l1 = p_read_length[last_read_id];
           int l2 = p_read_length[first_read_id];
-          int y = end + 1 - l1;
+          int y = end + 2 - l1;
           int z = pos2 + l2 -2;
           int len = z - y + 1;
+
+          //std::cout<<"y: "<<y<<" z: "<<z<<" len: "<<len<<" l1 :"<<l1<<" l2: "<<l2<<"\n";
 
           if(len == l1)
           {
@@ -300,7 +301,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
           {
             std::string new_seq;
             IntegerVector read_on_this_node, loc_on_this_node;
-            if(len > l1)
+            if(len > l1 && y>0)
             {
               new_seq = seq.substr(y, len);
               read_on_this_node.push_back(last_read_id);
@@ -311,6 +312,7 @@ void StrGraph::mergeSG(std::string& sam_name, std::string& contig_name)
             else
             {
               int cut = end - z + 1;
+              //std::cout<<"cut :"<<cut<<"\n";
               new_seq = "N";
               read_on_this_node.push_back(-1);
               loc_on_this_node.push_back(-cut);
@@ -660,7 +662,6 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
         for(; it_v_inv != boost::inv_adjacent_vertices(first_node, *p_graph_).second; ++it_v_inv)
         {
           int new_head = (*p_graph_)[*it_v_inv].rid_;
-          //std::cout<<"Head: "<<new_head<<"\t";
           if(!formCycle(path, new_head))  // no cycle allowed
           {
             path.push_front(new_head);
@@ -684,14 +685,12 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
               new_anchor.path = path;
               new_anchor.M_upstream = top_anchor.M_upstream - p_seq[new_head].size() + last_read_length; // +last_read_length;
               new_anchor.M_downstream = top_anchor.M_downstream;
-              //std::cout<<"head :"<<new_head<<"\t"<<"upstream :"<<new_anchor.M_upstream<<"\n";
 
               checking_stacks.push(new_anchor);
               path.pop_front();
             }
             else //predicted edge
             {
-		    //std::cout<<"Predicted adj edge(up) : "<<new_head<<"\n";
                     top_anchor.path = path;
                     half_done_stacks.push(top_anchor);
                     path.pop_front();
@@ -758,7 +757,6 @@ void StrGraph::DirectedDFS(struct anchor& anchor, predEdges& prededge_set, int M
                 path.pop_back();
               }
               else{
-		    //std::cout<<"Pred adj edge(down) : "<<new_tail<<"\n";
                     top_anchor.path = path;
                     if(ff_spadesGraph)    savePath(path_name, top_anchor.path);
                     else                  savePath(path_name, top_anchor);

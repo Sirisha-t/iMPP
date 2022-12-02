@@ -35,7 +35,7 @@ def translate(offset, seq, out):
 	return out_sixfr
 
 def reverse_complement(st):
-	nn = {'A':'T', 'C':'G', 'G':'C','T':'A'}
+	nn = {'A':'T', 'C':'G', 'G':'C','T':'A', 'N':'N'}
 	return "".join(nn[n] for n in reversed(st))
 	
 
@@ -88,7 +88,7 @@ def sixFrameTranslate(seqs_to_be_translated, allpredset, readinfo, out, predout)
 			if line.startswith(">"):
 				read_id = line.strip()
 				read_id = read_id[1:]
-				header = read_id[0:read_id.find("_")]
+				header = read_id[0:read_id.rfind("_")]
 				#aaseq_dict[header] = ""
 			else:
 				seq = line.strip()
@@ -130,6 +130,7 @@ def getSequenceInfo(read_Predictions, EP_predictions, input_read, outd):
 		if line[0] == '>':
 			sequence = ""
 			read = line[1:]
+			read = read[0:read.rfind('/')]
 			read = read.rstrip()
 			seq = fin.readline()
 			seq = seq.rstrip()
@@ -176,7 +177,7 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 		if line[0] != '#':
 			line = line.rstrip().split('\t')
 			rname = line[0];
-			#rname = rname[0:rname.rfind('/')]
+			rname = rname[0:rname.rfind('/')]
 			read_Predictions.add(rname)
 	end = time.time()
 	#print(" Completed reading reads gff file in :")
@@ -270,7 +271,6 @@ def InputFileReader(read_gff, edge_gff, path_gff,  bwa_edgename, bwa_pathname, i
 
 if __name__ == "__main__":
 	if len(sys.argv) == 8:
-		#out_dirname = sys.argv[1]
 		read_gff_name  = sys.argv[1]
 		edge_gff_name = sys.argv[2]
 		path_gff_name = sys.argv[3]
@@ -278,7 +278,5 @@ if __name__ == "__main__":
 		bwa_pathname = sys.argv[5]
 		fasta_read = sys.argv[6]
 		out_dirname = sys.argv[7]
-	    #print out_dirname
-		#print read_gff_name
-		#TestFile(read_gff_name)
+
 		InputFileReader(read_gff_name, edge_gff_name, path_gff_name, bwa_edgename, bwa_pathname, fasta_read, out_dirname)

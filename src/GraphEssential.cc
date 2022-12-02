@@ -77,6 +77,67 @@ void GraphEssential::WriteGraphASQG(const std::string & file)   {
     asqg_fh.close();
     return;
 }
+
+void GraphEssential::RenameASQG(const std::string &file){
+    ifstream asqg_fh (file);
+    string newname = file;
+    string outname1 = newname.substr(0,newname.find_last_of('.')) + ".rename.asqg";
+    string outname2 = newname.substr(0,newname.find_last_of('.')) + ".namemap.txt";
+    ofstream fout1(outname1.c_str());
+    ofstream fout2(outname2.c_str());
+    
+    if(asqg_fh.is_open())    {
+      boost::char_separator<char> sep(" \t");
+      boost::tokenizer<boost::char_separator<char> >::iterator it;
+      std::string line;
+      vector<std::string>     p_header;
+      unordered_map<std::string, int>  p_readID;
+            
+        while(getline(asqg_fh, line)) {
+            if(line[0] == 'V')    {
+              boost::tokenizer<boost::char_separator<char> > tokens(line, sep);
+              it = tokens.begin();
+              fout1 << *it << "\t";
+              it++;                           // cont[1], read name
+              int id = p_readID.size();
+              p_readID[*it] = id;
+              fout1 << id << "\t";
+              fout2 << *it << "\t"<<id<<"\n";
+              it++;                           // cont[2], sequence
+              fout1 << *it << "\n";
+            }
+            else if(line[0] == 'E'){
+                boost::tokenizer<boost::char_separator<char> > tokens(line, sep);
+                it = tokens.begin();            // cont[0], ED
+                fout1 << *it << "\t";
+                it++;                           // cont[1], read1 name
+                int source_id = p_readID[*it];
+                fout1 << source_id << " ";
+                it++;                           // cont[2], read2 name
+                int target_id = p_readID[*it];
+                fout1 << target_id;
+                it++;
+                while(it != tokens.end())
+                {
+                fout1 << " " << *it;
+                it++;
+                }
+                fout1 << "\n";
+
+            }
+            else{
+                fout1 << line << "\n";
+            }
+              
+        }
+        
+    }
+    asqg_fh.close();
+    fout1.close();
+    fout2.close();
+}
+  
+
 void GraphEssential::LoadGraphASQG(const std::string &file)  {
     clock_t t= clock();
     IDType num_nodes = GetNumReadsASQG(file);

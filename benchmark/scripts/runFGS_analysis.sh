@@ -1,8 +1,8 @@
 ## Please update the paths with your local folder path 
-REF="data/ref.fna"
+REF="test/ref.fna"
 OUTDIR="output"
 SCRIPT="scripts"
-NF_DIR="/home/tsirisha/Projects/Project1/impp-nf/iMPP"
+NF_DIR=".."
 FGS_DIR="lib/fgs"
 SGA_DIR="lib"
 SPADES_DIR="lib/spades/bin"
@@ -33,12 +33,12 @@ fi
 ## iMPP (FGS) run 
 ##################################
 echo "Running iMPP on input reads.."
-#if [ $paired -eq 1 ];
-#then
-#    $NF_DIR/nextflow $NF_DIR/main.nf --interleave $input --genecaller fgs --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
-#else
-#0     $NF_DIR/nextflow $NF_DIR/main.nf --single $input --genecaller fgs --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
-#fi
+if [ $paired -eq 1 ];
+then
+    $NF_DIR/nextflow $NF_DIR/main.nf --interleave $input --genecaller fgs --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
+else
+     $NF_DIR/nextflow $NF_DIR/main.nf --single $input --genecaller fgs --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
+fi
 echo "Completed iMPP run! Check log  in output directory for run details."
 
 ###################################
@@ -126,7 +126,7 @@ python $SCRIPT/filterPlassContig.py $OUTDIR/assembled_proteins.reads.faa
 python $SCRIPT/filterPlassContig.py $OUTDIR/assembled_proteins.fgs.faa
 
 ##Run diamond makedb on all contigs
-$DIAMOND_DIR/diamond makedb --in $OUTDIR/fgs.assembled_proteins.70.impp.faa -d $OUTDIR/impp_contig.index
+$DIAMOND_DIR/diamond makedb --in $OUTDIR/fgs.assembled_proteins.70.re.60.faa -d $OUTDIR/impp_contig.index
 $DIAMOND_DIR/diamond makedb --in $OUTDIR/assembled_proteins.reads.re.60.faa -d $OUTDIR/read_contig.index
 $DIAMOND_DIR/diamond makedb --in $OUTDIR/assembled_proteins.fgs.re.60.faa -d $OUTDIR/fgs_contig.index
 
@@ -148,9 +148,9 @@ else
 fi
 
 ##Run diamond blastp on reference against contigs
-$DIAMOND_DIR/diamond blastp -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/fgs.assembled_proteins.70.impp.faa -o $dir/plass.contig.impp.dmd
-$DIAMOND_DIR/diamond blastp -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/assembled_proteins.reads.re.60.faa -o $dir/plass.contig.read.dmd
-$DIAMOND_DIR/diamond blastp -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/assembled_proteins.fgs.re.60.faa -o $dir/plass.contig.fgs.dmd
+$DIAMOND_DIR/diamond blastp -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/fgs.assembled_proteins.70.re.60.faa -o $OUTDIR/plass.contig.impp.dmd
+$DIAMOND_DIR/diamond blastp -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/assembled_proteins.reads.re.60.faa -o $OUTDIR/plass.contig.read.dmd
+$DIAMOND_DIR/diamond blastp -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/assembled_proteins.fgs.re.60.faa -o $OUTDIR/plass.contig.fgs.dmd
 
 ##Run diamond blastx of ref against impp reads, all reads, fgs reads
 $DIAMOND_DIR/diamond blastx -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/fgs.reads.impp.fasta -o $OUTDIR/plass.ref.impp.dmd
@@ -160,13 +160,22 @@ $DIAMOND_DIR/diamond blastx -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/
 
 ##Run script to get contig-level and read-level specificities
 #1. iMPP (FGS)
-$SCRIPT/bin/pepstats $OUTDIR/plass.ref.impp.dmd $OUTDIR/plass.read.impp.dmd $OUTDIR/plass.contig.impp.dmd $OUTDIR/fgs.assembled_proteins.70.impp.faa $OUTDIR/ref.faa 60
+$SCRIPT/bin/pepstats $OUTDIR/plass.ref.impp.dmd $OUTDIR/plass.read.impp.dmd $OUTDIR/plass.contig.impp.dmd $OUTDIR/fgs.assembled_proteins.70.re.60.faa $OUTDIR/ref.faa 60
 #2. PLASS
 $SCRIPT/bin/pepstats $OUTDIR/plass.ref.read.dmd $OUTDIR/plass.read.read.dmd $OUTDIR/plass.contig.read.dmd $OUTDIR/assembled_proteins.reads.re.60.faa $OUTDIR/ref.faa 60
 #3. FGS+PLASS
 $SCRIPT/bin/pepstats $OUTDIR/plass.ref.fgs.dmd $OUTDIR/plass.read.fgs.dmd $OUTDIR/plass.contig.fgs.dmd $OUTDIR/assembled_proteins.fgs.re.60.faa $OUTDIR/ref.faa 60
 
-
+##Concatenate all peptide results into single file
+echo "--------------iMPP(FGS) peptide stats-------------" > peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.impp.seqlen.60.count >> peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> peptideStats_benchmark_results.txt
+echo "--------------FGS+PLASS peptide stats-------------" > peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.fgs.seqlen.60.count >> peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> peptideStats_benchmark_results.txt
+echo "--------------PLASS peptide stats-----------------" > peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.read.seqlen.60.count >> peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> peptideStats_benchmark_results.txt
 
 
 
