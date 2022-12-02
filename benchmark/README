@@ -15,11 +15,12 @@ cd iMPP/benchmark
 ## For complete datasets, please use the SRA accession numbers provided in the main manuscript to download the data
 
 ## wrapper script (analysis.sh) command line arguments:
-     -i input reads (in fastq format)
+    ```
+    -i input reads (in fastq format)
      -p 0 or 1 (0= single, 1=paired)
      -g fgs/prodigal (type of genecaller)
      -t (comp/ref; comp=complete dataset, without reference. ref=subsampled dataset, with reference)
-
+     ```
 ## Run the script analysis.sh with the following command line arguments to benchmark with FGS
 ## NOTE: Before running the follwing command, please ensure the path/to/scripts are all correctly specified in ~/benchmark/scripts/runFGS_analysis.sh (update to include your local path )
 
