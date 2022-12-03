@@ -11,13 +11,13 @@ __Go to the directory /iMPP/benchmark__
 cd iMPP/benchmark
 ```
 
-__Command line to run benchmarking on a simulated dataset (sds1 with 2x coverage) is provided below__
+__Command line to run benchmarking on a test dataset is provided below__
 
-For more details on the test dataset, please refer to Supplementary Methods and Results
+For more details on the test dataset, please refer to Supplementary Methods and Results (SDS1, 2x coverage)
 
 For testing on other datasets benchmarked in the manuscript, please download the reads from: https://cbb.ittc.ku.edu/iMPP.html
 
-For complete datasets, please use the SRA accession numbers provided in the main manuscript to download the data
+For complete datasets, please use the SRA accession numbers provided in the main manuscript to download the data first
 
 Wrapper script (analysis.sh) command line arguments:
 ```
@@ -29,7 +29,7 @@ Wrapper script (analysis.sh) command line arguments:
 
 __Run the script 'analysis.sh' with the following command line arguments to benchmark with FGS__
 
-NOTE: Before running the following command, please ensure you update the path to all third-party tools and input/output directories in ~/benchmark/scripts/runFGS_analysis.sh (update to include your local path )
+NOTE: Before running the following command, please ensure you update the path to all third-party tools and input/output directories in ~/benchmark/scripts/runFGS_analysis.sh (update to include your local path)
 
 The test dataset and ground truth reference sequence are provided in the /test folder. You can update the folder to include other datasets (reads and ground truth) to benchmark. 
 ```
