@@ -2,14 +2,11 @@
 
 __All benchmarking scripts can be found in the /benchmark folder and its subfolders__
 
-Please clone the Github repository using the following command
+Please run setup.sh using the following command:
 ```
-git clone https://github.com/Sirisha-t/iMPP.git
+./setup.sh
 ```
-__Go to the directory /iMPP/benchmark__
-```
-cd iMPP/benchmark
-```
+This will install all 3rd party tools needed for benchmarking, as well as compile the benchmarking scripts. 
 
 __Command line to run benchmarking on a test dataset is provided below__
 
