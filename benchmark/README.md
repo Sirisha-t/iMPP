@@ -2,11 +2,10 @@
 
 __All benchmarking scripts can be found in the /benchmark folder and its subfolders__
 
-Please run setup.sh using the following command:
+First step is to compile benchmarking scripts (/scripts/src folder) and install all 3rd party tools used for benchmarking (/lib folder). Please run the following setup script to install and compile and necessary tools/scripts.
 ```
 ./setup.sh
 ```
-This will install all 3rd party tools needed for benchmarking, as well as compile the benchmarking scripts. 
 
 __Command line to run benchmarking on a test dataset is provided below__
 
