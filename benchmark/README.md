@@ -17,7 +17,7 @@ For complete datasets, please use the SRA accession numbers provided in the main
 
 Wrapper script (analysis.sh) command line arguments:
 ```
-./analysis.sh
+Usage: ./analysis.sh -i <input fastq> -p <paired_flag> -g <genecaller> -t <dataset_type>
      -i input reads (in fastq format)
      -p 0 or 1 (0= single, 1=paired)
      -g fgs/prodigal (type of genecaller)
