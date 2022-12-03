@@ -167,15 +167,15 @@ $SCRIPT/bin/pepstats $OUTDIR/plass.ref.read.dmd $OUTDIR/plass.read.read.dmd $OUT
 $SCRIPT/bin/pepstats $OUTDIR/plass.ref.fgs.dmd $OUTDIR/plass.read.fgs.dmd $OUTDIR/plass.contig.fgs.dmd $OUTDIR/assembled_proteins.fgs.re.60.faa $OUTDIR/ref.faa 60
 
 ##Concatenate all peptide results into single file
-echo "--------------iMPP(FGS) peptide stats-------------" > peptideStats_benchmark_results.txt
-cat $OUTDIR/plass.read.impp.seqlen.60.count >> peptideStats_benchmark_results.txt
-echo "--------------------------------------------------" >> peptideStats_benchmark_results.txt
-echo "--------------FGS+PLASS peptide stats-------------" > peptideStats_benchmark_results.txt
-cat $OUTDIR/plass.read.fgs.seqlen.60.count >> peptideStats_benchmark_results.txt
-echo "--------------------------------------------------" >> peptideStats_benchmark_results.txt
-echo "--------------PLASS peptide stats-----------------" > peptideStats_benchmark_results.txt
-cat $OUTDIR/plass.read.read.seqlen.60.count >> peptideStats_benchmark_results.txt
-echo "--------------------------------------------------" >> peptideStats_benchmark_results.txt
+echo "--------------iMPP(FGS) peptide stats-------------" > $OUTDIR/peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.impp.seqlen.60.count >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------FGS+PLASS peptide stats-------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.fgs.seqlen.60.count >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------PLASS peptide stats-----------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.read.seqlen.60.count >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> $OUTDIR/peptideStats_benchmark_results.txt
 
 
 
