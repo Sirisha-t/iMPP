@@ -29,15 +29,15 @@ NOTE: Before running the following command, please ensure you update the path to
 
 The test dataset and ground truth reference sequence are provided in the /test folder. You can update the folder to include other datasets (reads and ground truth) to benchmark. 
 ```
-bash analysis.sh -i test/sds1.2x.fq -p 0 -g fgs -t ref
+./analysis.sh -i test/sds1.2x.fq -p 0 -g fgs -t ref
 ```
  
 
 __Run the script 'analysis.sh' with the following command line arguments to benchmark with Prodigal__
 
-NOTE: Before running the follwing command, please ensure the path/to/scripts are all correctly specified in ~/benchmark/scripts/runMPD_analysis.sh (update to include your local path )
+NOTE: Before running the follwing command, please ensure the path/to/scripts are all correctly specified in ~/benchmark/scripts/runMPD_analysis.sh (update to include your local path)
 ```
-bash analysis.sh -i test/sds1.2x.fq -p 0 -g mpd -t ref
+./analysis.sh -i test/sds1.2x.fq -p 0 -g mpd -t ref
 ```
 
 
