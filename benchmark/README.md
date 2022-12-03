@@ -4,7 +4,7 @@ __All benchmarking scripts can be found in the /benchmark folder and its subfold
 
 First step is to compile benchmarking scripts (/scripts/src folder) and install all 3rd party tools used for benchmarking (/lib folder). Please run the following setup script to install and compile and necessary tools/scripts.
 ```
-./setup.sh
+$ ./setup.sh
 ```
 
 __Command line to run benchmarking on a test dataset is provided below__
@@ -17,6 +17,7 @@ For complete datasets, please use the SRA accession numbers provided in the main
 
 Wrapper script (analysis.sh) command line arguments:
 ```
+./analysis.sh
      -i input reads (in fastq format)
      -p 0 or 1 (0= single, 1=paired)
      -g fgs/prodigal (type of genecaller)
@@ -29,7 +30,7 @@ NOTE: Before running the following command, please ensure you update the path to
 
 The test dataset and ground truth reference sequence are provided in the /test folder. You can update the folder to include other datasets (reads and ground truth) to benchmark. 
 ```
-./analysis.sh -i test/sds1.2x.fq -p 0 -g fgs -t ref
+$ ./analysis.sh -i test/sds1.2x.fq -p 0 -g fgs -t ref
 ```
  
 
@@ -37,7 +38,7 @@ __Run the script 'analysis.sh' with the following command line arguments to benc
 
 NOTE: Before running the follwing command, please ensure the path/to/scripts are all correctly specified in ~/benchmark/scripts/runMPD_analysis.sh (update to include your local path)
 ```
-./analysis.sh -i test/sds1.2x.fq -p 0 -g mpd -t ref
+$ ./analysis.sh -i test/sds1.2x.fq -p 0 -g mpd -t ref
 ```
 
 
