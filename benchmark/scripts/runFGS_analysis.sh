@@ -105,9 +105,10 @@ $FGS_DIR/run_FragGeneScan.pl -genome=$REF -out=$OUTDIR/ref -complete=1 -train=co
 ## Mapping reads to FGS predicted reference
 $BWA_DIR/bwa index -p $OUTDIR/ref $REF
 $BWA_DIR/bwa mem $OUTDIR/ref $OUTDIR/reads.fastq -t $threads -k 19 -T 30 -o $OUTDIR/ref.sam
+
 ## Compute precision, recall and F1-score
 ## for iMPP(FGS), SGA+FGS, SPAdes+FGS and FGS
-##NOTE: Update the config file provided with your local path folders
+##NOTE: Update the config file provided in $CONFIG with your local path folders
 $SCRIPT/bin/eval $CONFIG &> $OUTDIR/precision_recall.log
 fi
 ############################################

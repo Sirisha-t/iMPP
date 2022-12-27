@@ -1,30 +1,41 @@
 ## Please update the paths with your local folder path 
-REF=""
-OUTDIR=""
-SCRIPT=""
-MPD_DIR=""
-SGA_DIR=""
-SPADES_DIR=""
-CONFIG=
+REF="test/ref.fna"
+OUTDIR="output"
+SCRIPT="scripts"
+NF_DIR=".."
+MPD_DIR="lib/prodigal"
+SGA_DIR="lib"
+SPADES_DIR="lib/spades/bin"
+BWA_DIR="lib/bwa"
+DIAMOND_DIR="lib/diamond"
+PLASS_DIR="lib/plass/bin"
+SPADES_OUT="output/spades"
+CONFIG="config/config.txt"
 threads=16
 
 ## read input arguments
-while getopts i:p: flag
+while getopts i:p:t: flag
 do
     case "${flag}" in
         i) input=${OPTARG};;
         p) paired=${OPTARG};;
+        t) type=${OPTARG};;
     esac
 done
 
+## check if output dir exists, if not create one
+if [ ! -d $OUTDIR ] 
+then
+    mkdir $OUTDIR
+fi
 ##################################
 ## iMPP (MPD) run 
 ##################################
 if [[$paired -eq 1]]
 then
-    $SCRIPT/nextflow $SCRIPT/main.nf --interleave $input --genecaller prodigal --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
+    $NF_DIR/nextflow $NF_DIR/main.nf --interleave $input --genecaller prodigal --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
 else
-     $SCRIPT/nextflow $SCRIPT/main.nf --single $input --genecaller prodigal --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
+     $NF_DIR/nextflow $NF_DIR/main.nf --single $input --genecaller prodigal --outdir $OUTDIR -profile base,docker -with-report $OUTDIR/report.html -with-trace $OUTDIR/trace.txt -with-timeline $OUTDIR/timeline.html -resume &> $OUTDIR/impp_run.log
 fi
 
 ###################################
@@ -53,6 +64,7 @@ $SGA_DIR/sga rmdup -t $threads assembly.ec.fq
 $SGA_DIR/sga overlap -t $threads -m 20 assembly.ec.rmdup.fa
 gunzip -f assembly.ec.rmdup.asqg.gz
 mv assembly.ec.rmdup.asqg $OUTDIR
+rm -f assembly.*
 
 ##Getting sga contigs, MPD predictions and bwa mapping to reads
 $SGA_DIR/sga assemble -m 20 --transitive-reduction -g 0 -o $OUTDIR/sga $OUTDIR/assembly.ec.rmdup.asqg
@@ -94,13 +106,8 @@ $BWA_DIR/bwa mem $OUTDIR/ref $OUTDIR/reads.fastq -t $threads -k 19 -T 30 -o $OUT
 ## Compute precision, recall and F1-score
 ## for iMPP(MPD), SGA+MPD, SPAdes+MPD and MPD
 ##NOTE: Update the config file provided with your local path folders
-$BIN/eval $CONFIG &> $LOG/precision_recall.log
+$SCRIPT/bin/eval $CONFIG &> $OUTDIR/precision_recall.log
 fi
-
-if [[$type == "comp"]]
-then
-$BIN/raw_count.py 
-
 
 ############################################
 ## Compute peptide assembly statistics (for subsampled or simulated datasets)
@@ -152,14 +159,22 @@ $DIAMOND_DIR/diamond blastx -p $threads -d $OUTDIR/ref_protein.index -q $OUTDIR/
 
 ##Run script to get contig-level and read-level specificities and peptide statistics
 #1. iMPP (MPD)
-$BIN/ref_pepstats $OUTDIR/plass.ref.impp.dmd $OUTDIR/plass.read.impp.dmd $OUTDIR/plass.contig.impp.dmd $OUTDIR/assembled_proteins.impp.re.60.faa $REFDIR/ref.faa 60
+$SCRIPT/bin/pepstats $OUTDIR/plass.ref.impp.dmd $OUTDIR/plass.read.impp.dmd $OUTDIR/plass.contig.impp.dmd $OUTDIR/assembled_proteins.impp.re.60.faa $OUTDIR/ref.faa 60
 #2. PLASS
-$BIN/ref_pepstats $OUTDIR/plass.ref.read.dmd $OUTDIR/plass.read.read.dmd $OUTDIR/plass.contig.read.dmd $OUTDIR/assembled_proteins.reads.re.60.faa $REFDIR/ref.faa 60
+$SCRIPT/bin/pepstats $OUTDIR/plass.ref.read.dmd $OUTDIR/plass.read.read.dmd $OUTDIR/plass.contig.read.dmd $OUTDIR/assembled_proteins.reads.re.60.faa $OUTDIR/ref.faa 60
 #3. MPD+PLASS
-$BIN/ref_pepstats $OUTDIR/plass.ref.fgs.dmd $OUTDIR/plass.read.fgs.dmd $OUTDIR/plass.contig.fgs.dmd $OUTDIR/assembled_proteins.fgs.re.60.faa $REFDIR/ref.faa 60
+$SCRIPT/bin/pepstats $OUTDIR/plass.ref.fgs.dmd $OUTDIR/plass.read.fgs.dmd $OUTDIR/plass.contig.fgs.dmd $OUTDIR/assembled_proteins.fgs.re.60.faa $OUTDIR/ref.faa 60
 
-
-
+##Concatenate all peptide results into single file
+echo "--------------iMPP(MPD) peptide stats-------------" > $OUTDIR/peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.impp.seqlen.60.count >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------MPD+PLASS peptide stats-------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.mpd.seqlen.60.count >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------PLASS peptide stats-----------------" >> $OUTDIR/peptideStats_benchmark_results.txt
+cat $OUTDIR/plass.read.read.seqlen.60.count >> $OUTDIR/peptideStats_benchmark_results.txt
+echo "--------------------------------------------------" >> $OUTDIR/peptideStats_benchmark_results.txt
 
 
 

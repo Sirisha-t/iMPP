@@ -24,6 +24,18 @@ make clean
 make fgs
 [ $? -ne 0 ] && exit $?
 
+#Installing Prodigal
+echo -e "\nInstalling Prodigal..."
+cd $IMPP_HOME/lib
+if [ -d Prodigal ]; then
+	rm -rf Prodigal
+fi
+tar xvzf prodigal_v2.6.3.tar.gz
+cd Prodigal
+make clean
+make install
+[ $? -ne 0 ] && exit $?
+
 
 ## Installing SPAdes
 cd $IMPP_HOME/lib
@@ -72,6 +84,7 @@ tar xvf diamond.tar.gz
 
 echo -e "\nCompleted installing all third-party tools."
 echo -e "\n----------------------------------------------\n"
+
 ## IMPP benchmark scripts compile
 if [ ! -e $IMPP_HOME/scripts/bin ]; then
         mkdir $IMPP_HOME/scripts/bin
