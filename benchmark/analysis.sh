@@ -1,10 +1,6 @@
 #!/bin/bash
 ### BENCHMARK SCRIPTS ###
-
-## Please update the paths with your local folder path 
 SCRIPT="scripts"
-
-
 ## -i input reads (in fastq format)
 ## -p 0 or 1 ( 0= single, 1=paired)
 ## -g fgs/prodigal (type of genecaller)

@@ -77,9 +77,6 @@ void load_dmd(const std::string & refread,\
     String2DMap ReadsperRef;
     IntegerSet allReadsinRef;
 
-
-
-
     IntegerSet readCount60;
     IntegerSet readCount70;
     IntegerSet readCount80;
@@ -102,10 +99,6 @@ void load_dmd(const std::string & refread,\
     StringSet ref70;
     StringSet ref80;
     StringSet ref90;
-    //int ref60 = 0;
-    //int ref70 = 0;
-    //int ref80 = 0;
-    //int ref90 = 0;
     int contig_count=0;
     int readcount = 0;
     int refcount = 0;
@@ -345,15 +338,6 @@ void load_dmd(const std::string & refread,\
                }
 
               }
-              // for ref seq match
-            /*  if(ref_align_len >= (0.6)*actual_ref_len)
-                  ref60 += 1;
-              if(ref_align_len >= (0.7)*actual_ref_len)
-                  ref70 += 1;
-              if(ref_align_len >= (0.8)*actual_ref_len)
-                  ref80 += 1;
-              if(ref_align_len >= (0.9)*actual_ref_len)
-                  ref90 += 1;*/
 
         }
       }
@@ -418,33 +402,6 @@ void load_dmd(const std::string & refread,\
       readCount90.insert(*it2);
     //readCount60 = readCount60 + NameMap[*it];
   }
-
-  /* for(StringSet::iterator it= ref60.begin(); it!= ref60.end();it++)
-    {
-      for(IntegerSet::iterator it2 = ReadsperRef[*it].begin(); it2 != ReadsperRef[*it].end(); ++it2)
-        refCount60.insert(*it2);
-      //readCount60 = readCount60 + NameMap[*it];
-    }
-    for(StringSet::iterator it= ref70.begin(); it!= ref70.end();it++)
-      {
-        for(IntegerSet::iterator it2 = ReadsperRef[*it].begin(); it2 != ReadsperRef[*it].end(); ++it2)
-          refCount70.insert(*it2);
-        //readCount60 = readCount60 + NameMap[*it];
-      }
-
-      for(StringSet::iterator it= ref80.begin(); it!= ref80.end();it++)
-        {
-          for(IntegerSet::iterator it2 = ReadsperRef[*it].begin(); it2 != ReadsperRef[*it].end(); ++it2)
-            refCount80.insert(*it2);
-          //readCount60 = readCount60 + NameMap[*it];
-        }
-        for(StringSet::iterator it= ref90.begin(); it!= ref90.end();it++)
-          {
-            for(IntegerSet::iterator it2 = ReadsperRef[*it].begin(); it2 != ReadsperRef[*it].end(); ++it2)
-              refCount90.insert(*it2);
-            //readCount60 = readCount60 + NameMap[*it];
-          }
-*/
 
       fin.clear();
       fin.close();
